@@ -1,10 +1,9 @@
 import React from 'react';
-import {View, Text} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import LogInScreen from '../screens/LogInScreen';
 import RegistrationScreen from '../screens/RegistrationScreen';
+import TabNavigator from './TabNavigator';
 
 const RootStack = createStackNavigator();
 
@@ -19,6 +18,11 @@ const RootNavigator = () => {
       <RootStack.Screen
         name="Register"
         component={RegistrationScreen}
+        options={{headerShown: false}}
+      />
+      <RootStack.Screen
+        name="Main"
+        component={TabNavigator}
         options={{headerShown: false}}
       />
     </RootStack.Navigator>
