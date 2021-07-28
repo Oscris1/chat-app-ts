@@ -1,15 +1,54 @@
-import React from 'react';
-import {View, Text, StyleSheet, Button} from 'react-native';
+import React, {useState} from 'react';
+import {View, Text, StyleSheet, Button, TextInput} from 'react-native';
+
+import auth from '@react-native-firebase/auth';
 
 const RegistrationScreen = ({navigation}) => {
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+
+  const register = () => {
+    if (!email || !password) return;
+    auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(() => {
+        console.log('User account created & signed in!');
+        setEmail('');
+        setPassword('');
+      })
+      .catch(error => {
+        if (error.code === 'auth/email-already-in-use') {
+          console.log('That email address is already in use!');
+        }
+
+        if (error.code === 'auth/invalid-email') {
+          console.log('That email address is invalid!');
+        }
+
+        console.error(error);
+      });
+  };
   return (
     <View style={styles.container}>
-      <Text>Register</Text>
+      <Text style={styles.headerText}>Register</Text>
+      <TextInput
+        style={styles.input}
+        onChangeText={setEmail}
+        value={email}
+        placeholder="Email"
+      />
+      <TextInput
+        style={styles.input}
+        onChangeText={setPassword}
+        value={password}
+        placeholder="Password"
+        secureTextEntry={true}
+      />
+      <Button onPress={register} title="Register" color="green" />
       <Button
         onPress={() => navigation.navigate('LogIn')}
-        title="Login Screen"
-        color="#841584"
-        accessibilityLabel="Learn more about this purple button"
+        title="Log In page"
+        color="#AFBBF2"
       />
     </View>
   );
@@ -20,6 +59,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  headerText: {
+    fontSize: 50,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#AFBBF2',
+    width: '70%',
+    margin: 2,
   },
 });
 
