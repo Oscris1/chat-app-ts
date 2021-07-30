@@ -1,10 +1,15 @@
-import React, {useState, useCallback, useEffect} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import React from 'react';
+import {View, Text, StyleSheet, Button} from 'react-native';
 
-const PeopleScreen = () => {
+const PeopleScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       <Text>People Screen, Chats list</Text>
+      <Button
+        onPress={() => navigation.navigate('Chat')}
+        title="idz do czatu"
+        color="#AFBBF2"
+      />
     </View>
   );
 };
