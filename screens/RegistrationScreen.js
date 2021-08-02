@@ -12,7 +12,7 @@ const RegistrationScreen = ({navigation}) => {
     if (!email || !password) return;
     auth()
       .createUserWithEmailAndPassword(email, password)
-      .then(() => {
+      .then(user => {
         console.log('User account created & signed in!');
         setEmail('');
         setPassword('');
@@ -20,7 +20,7 @@ const RegistrationScreen = ({navigation}) => {
         // Create user document
         firestore()
           .collection('Users')
-          .doc(email)
+          .doc(user.user._user.uid)
           .set({
             email: email,
           })
