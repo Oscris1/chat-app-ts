@@ -1,14 +1,43 @@
-import React from 'react';
-import {View, Text, StyleSheet, Button} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, Text, StyleSheet, Button, FlatList} from 'react-native';
+import {useSelector, useDispatch} from 'react-redux';
+import firestore from '@react-native-firebase/firestore';
 
-const PeopleScreen = ({navigation}) => {
+import ChatListElement from '../components/ChatListElement';
+
+const PeopleScreen = () => {
+  const [loading, setLoading] = useState(true);
+  const [chats, setChats] = useState([]);
+  const ref = firestore().collection('Chats');
+
+  // fetch messages
+  useEffect(() => {
+    const list = [];
+    return ref.onSnapshot(querySnapshot => {
+      querySnapshot.forEach(documentSnapshot => {
+        console.log('User ID: ', documentSnapshot.id, documentSnapshot.data());
+        list.push({
+          id: documentSnapshot.id,
+        });
+      });
+      setChats(list);
+      console.log(list);
+
+      if (loading) {
+        setLoading(false);
+      }
+    });
+  }, []);
+
   return (
     <View style={styles.container}>
       <Text>People Screen, Chats list</Text>
-      <Button
-        onPress={() => navigation.navigate('Chat')}
-        title="idz do czatu"
-        color="#AFBBF2"
+
+      <FlatList
+        style={styles.menuList}
+        data={chats}
+        renderItem={({item}) => <ChatListElement id={item.id} />}
+        keyExtractor={item => item.id.toString()}
       />
     </View>
   );
