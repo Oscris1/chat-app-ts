@@ -3,7 +3,10 @@ import {GiftedChat, Bubble} from 'react-native-gifted-chat';
 
 import firestore from '@react-native-firebase/firestore';
 
+import {useSelector, useDispatch} from 'react-redux';
+
 const ChatScreen = () => {
+  const authData = useSelector(state => state.auth);
   const [loading, setLoading] = useState(true);
   const [messages, setMessages] = useState([]);
   const ref = firestore().collection('Chats');
@@ -65,8 +68,8 @@ const ChatScreen = () => {
       messages={messages}
       onSend={messages => onSend(messages)}
       user={{
-        _id: 1,
-        name: 'Damian',
+        _id: authData.userData.id,
+        name: authData.userData.email,
       }}
     />
   );
