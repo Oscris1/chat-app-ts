@@ -12,8 +12,8 @@ const PeopleScreen = () => {
 
   // fetch messages
   useEffect(() => {
-    const list = [];
     return ref.onSnapshot(querySnapshot => {
+      const list = [];
       querySnapshot.forEach(documentSnapshot => {
         console.log('User ID: ', documentSnapshot.id, documentSnapshot.data());
         list.push({
