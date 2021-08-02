@@ -15,7 +15,6 @@ const PeopleScreen = () => {
     return ref.onSnapshot(querySnapshot => {
       const list = [];
       querySnapshot.forEach(documentSnapshot => {
-        console.log('User ID: ', documentSnapshot.id, documentSnapshot.data());
         list.push({
           id: documentSnapshot.id,
         });
