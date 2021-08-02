@@ -5,11 +5,17 @@ import firestore from '@react-native-firebase/firestore';
 
 import {useSelector, useDispatch} from 'react-redux';
 
+import {useRoute} from '@react-navigation/native';
+
 const ChatScreen = () => {
+  const route = useRoute();
   const authData = useSelector(state => state.auth);
   const [loading, setLoading] = useState(true);
   const [messages, setMessages] = useState([]);
-  const ref = firestore().collection('Chats');
+
+  const {id} = route.params;
+
+  const ref = firestore().collection('Chats').doc(id).collection('Messages');
 
   // fetch messages
   useEffect(() => {
