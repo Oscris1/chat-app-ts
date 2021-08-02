@@ -1,19 +1,21 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, Button, TextInput} from 'react-native';
 import auth from '@react-native-firebase/auth';
+import {useSelector, useDispatch} from 'react-redux';
+
+import {logIn} from '../store/auth-slice';
 
 const LogInScreen = ({navigation}) => {
+  const dispatch = useDispatch();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [initializing, setInitializing] = useState(true);
-  const [user, setUser] = useState();
 
   // Handle user state changes
   function onAuthStateChanged(user) {
-    setUser(user);
     if (user) {
+      dispatch(logIn(user._user));
       navigation.navigate('Main');
-      console.log(user);
     }
     if (initializing) setInitializing(false);
   }

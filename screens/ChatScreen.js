@@ -8,6 +8,7 @@ const ChatScreen = () => {
   const [messages, setMessages] = useState([]);
   const ref = firestore().collection('Chats');
 
+  // fetch messages
   useEffect(() => {
     return ref.orderBy('createdAt', 'desc').onSnapshot(querySnapshot => {
       const list = [];
@@ -28,7 +29,7 @@ const ChatScreen = () => {
       }
     });
   }, []);
-
+  // Send message
   const onSend = useCallback((messages = []) => {
     setMessages(previousMessages =>
       GiftedChat.append(previousMessages, messages),
