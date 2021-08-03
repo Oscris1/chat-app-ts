@@ -22,7 +22,9 @@ const RegistrationScreen = ({navigation}) => {
           .collection('Users')
           .doc(user.user._user.uid)
           .set({
+            id: user.user._user.uid,
             email: email,
+            chats: [],
           })
           .then(() => {
             console.log('User added!');
