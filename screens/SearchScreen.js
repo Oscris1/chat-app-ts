@@ -10,6 +10,8 @@ import {
 
 import firestore from '@react-native-firebase/firestore';
 
+import SearchedUser from '../components/SearchedUser';
+
 const SearchScreen = () => {
   const [emailText, setEmailText] = useState('');
   const [searchedUsers, setSearchedUsers] = useState([]);
@@ -48,7 +50,7 @@ const SearchScreen = () => {
       <FlatList
         style={styles.menuList}
         data={searchedUsers}
-        renderItem={({item}) => <Text>{item.email}</Text>}
+        renderItem={({item}) => <SearchedUser item={item} />}
         keyExtractor={item => item.id.toString()}
       />
     </View>
