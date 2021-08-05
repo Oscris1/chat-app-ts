@@ -24,7 +24,6 @@ const RegistrationScreen = ({navigation}) => {
           .set({
             id: user.user._user.uid,
             email: email,
-            chats: [],
           })
           .then(() => {
             console.log('User added!');
