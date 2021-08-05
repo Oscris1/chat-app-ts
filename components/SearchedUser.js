@@ -13,10 +13,10 @@ import {useSelector, useDispatch} from 'react-redux';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const SearchedUser = ({item}) => {
+const SearchedUser = ({item, hasChat}) => {
   const authData = useSelector(state => state.auth);
-
   const createChat = () => {
+    if (hasChat) return;
     //create chat
     firestore()
       .collection('Chats')
@@ -43,9 +43,11 @@ const SearchedUser = ({item}) => {
   return (
     <View style={styles.container}>
       <Text>{item.email}</Text>
-      <TouchableOpacity onPress={createChat} style={styles.startChatButton}>
-        <Text>Start chat</Text>
-      </TouchableOpacity>
+      {!hasChat && authData.userData.id != item.id && (
+        <TouchableOpacity onPress={createChat} style={styles.startChatButton}>
+          <Text>Start chat</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };

@@ -1,12 +1,7 @@
-import React, {useState} from 'react';
-import {
-  View,
-  StyleSheet,
-  TextInput,
-  Button,
-  FlatList,
-  Text,
-} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, StyleSheet, TextInput, Button, FlatList} from 'react-native';
+
+import {useSelector, useDispatch} from 'react-redux';
 
 import firestore from '@react-native-firebase/firestore';
 
@@ -15,6 +10,34 @@ import SearchedUser from '../components/SearchedUser';
 const SearchScreen = () => {
   const [emailText, setEmailText] = useState('');
   const [searchedUsers, setSearchedUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [chatUsers, setChatUsers] = useState([]);
+
+  const authData = useSelector(state => state.auth);
+
+  const ref = firestore()
+    .collection('Users')
+    .doc(authData.userData.id)
+    .collection('Chats');
+
+  // fetch Chat Users
+  useEffect(() => {
+    return ref.onSnapshot(querySnapshot => {
+      // List of users id
+      const list = [];
+      querySnapshot.forEach(documentSnapshot => {
+        // data inside the Chat doc
+        const {user} = documentSnapshot.data();
+        list.push(user);
+      });
+      setChatUsers(list);
+
+      if (loading) {
+        setLoading(false);
+      }
+    });
+  }, []);
+
   // search user by email
   const searchByEmail = () => {
     firestore()
@@ -50,7 +73,9 @@ const SearchScreen = () => {
       <FlatList
         style={styles.menuList}
         data={searchedUsers}
-        renderItem={({item}) => <SearchedUser item={item} />}
+        renderItem={({item}) => (
+          <SearchedUser item={item} hasChat={chatUsers.includes(item.id)} />
+        )}
         keyExtractor={item => item.id.toString()}
       />
     </View>
