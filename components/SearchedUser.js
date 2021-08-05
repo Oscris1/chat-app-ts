@@ -37,6 +37,7 @@ const SearchedUser = ({item, hasChat}) => {
         firestore().collection('Users').doc(item.id).collection('Chats').add({
           id: chat.id,
           user: authData.userData.id,
+          email: authData.userData.email,
         });
       });
   };

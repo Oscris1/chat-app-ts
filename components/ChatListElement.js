@@ -2,7 +2,7 @@ import React from 'react';
 import {TouchableOpacity, View, Text, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
-const ChatListElement = ({item}) => {
+const ChatListElement = ({id, item}) => {
   const navigation = useNavigation();
   return (
     <TouchableOpacity

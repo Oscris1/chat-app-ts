@@ -45,7 +45,7 @@ const PeopleScreen = () => {
       <FlatList
         style={styles.menuList}
         data={chats}
-        renderItem={({item}) => <ChatListElement item={item} />}
+        renderItem={({item}) => <ChatListElement id={item.id} item={item} />}
         keyExtractor={item => item.id.toString()}
       />
     </View>
