@@ -23,10 +23,11 @@ const PeopleScreen = () => {
       const list = [];
       querySnapshot.forEach(documentSnapshot => {
         // data inside the Chat doc
-        const {id, user} = documentSnapshot.data();
+        const {id, user, email} = documentSnapshot.data();
         list.push({
           id,
           user,
+          email,
         });
       });
       setChats(list);
@@ -44,7 +45,7 @@ const PeopleScreen = () => {
       <FlatList
         style={styles.menuList}
         data={chats}
-        renderItem={({item}) => <ChatListElement id={item.id} />}
+        renderItem={({item}) => <ChatListElement item={item} />}
         keyExtractor={item => item.id.toString()}
       />
     </View>

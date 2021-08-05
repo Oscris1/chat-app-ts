@@ -30,6 +30,7 @@ const SearchedUser = ({item, hasChat}) => {
           .add({
             id: chat.id,
             user: item.id,
+            email: item.email,
           });
 
         // add chat to selected user
