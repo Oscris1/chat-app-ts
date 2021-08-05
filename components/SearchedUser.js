@@ -26,23 +26,17 @@ const SearchedUser = ({item}) => {
         firestore()
           .collection('Users')
           .doc(authData.userData.id)
-          .update({
-            chats: firestore.FieldValue.arrayUnion({
-              id: chat.id,
-              user: item.id,
-            }),
+          .collection('Chats')
+          .add({
+            id: chat.id,
+            user: item.id,
           });
 
         // add chat to selected user
-        firestore()
-          .collection('Users')
-          .doc(item.id)
-          .update({
-            chats: firestore.FieldValue.arrayUnion({
-              id: chat.id,
-              user: authData.userData.id,
-            }),
-          });
+        firestore().collection('Users').doc(item.id).collection('Chats').add({
+          id: chat.id,
+          user: authData.userData.id,
+        });
       });
   };
 
