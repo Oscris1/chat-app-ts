@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
+import {useNavigation} from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import {useSelector, useDispatch} from 'react-redux';
 
@@ -15,6 +16,9 @@ const windowHeight = Dimensions.get('window').height;
 
 const SearchedUser = ({item, hasChat}) => {
   const authData = useSelector(state => state.auth);
+  const navigation = useNavigation();
+
+  // create chat handler
   const createChat = () => {
     if (hasChat) return;
     //create chat
@@ -39,6 +43,8 @@ const SearchedUser = ({item, hasChat}) => {
           user: authData.userData.id,
           email: authData.userData.email,
         });
+        // Navigate to chat
+        navigation.navigate('Chat', {id: chat.id});
       });
   };
 
