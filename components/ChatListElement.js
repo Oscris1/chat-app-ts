@@ -1,6 +1,8 @@
 import React from 'react';
-import {TouchableOpacity, View, Text, StyleSheet} from 'react-native';
+import {TouchableOpacity, Dimensions, Text, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+
+const windowWidth = Dimensions.get('window').width;
 
 const ChatListElement = ({id, item}) => {
   const navigation = useNavigation();
@@ -15,8 +17,16 @@ const ChatListElement = ({id, item}) => {
 
 const styles = StyleSheet.create({
   container: {
-    borderColor: '#000',
+    backgroundColor:
+      'hsl(211.01694915254237, 50.86206896551724%, 80.50980392156863%)',
+    width: windowWidth - 40,
+    margin: 5,
+    padding: 15,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
     borderWidth: 1,
+    flexDirection: 'row',
   },
 });
 
