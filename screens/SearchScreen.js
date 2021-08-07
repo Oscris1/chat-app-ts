@@ -23,7 +23,7 @@ const SearchScreen = () => {
   // fetch Chat Users
   useEffect(() => {
     return ref.onSnapshot(querySnapshot => {
-      // List of users id
+      // List of users id (for check if chat already exist)
       const list = [];
       querySnapshot.forEach(documentSnapshot => {
         // data inside the Chat doc
@@ -48,13 +48,14 @@ const SearchScreen = () => {
       .then(users => {
         const list = [];
         users.forEach(doc => {
-          const {email} = doc.data();
+          const {email, username} = doc.data();
           const id = doc._ref.id;
           console.log(email);
           console.log(id);
           list.push({
             id,
             email,
+            username,
           });
         });
         setSearchedUsers(list);

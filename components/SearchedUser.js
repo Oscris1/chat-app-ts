@@ -35,6 +35,7 @@ const SearchedUser = ({item, hasChat}) => {
             id: chat.id,
             user: item.id,
             email: item.email,
+            username: item.username,
           });
 
         // add chat to selected user
@@ -42,6 +43,7 @@ const SearchedUser = ({item, hasChat}) => {
           id: chat.id,
           user: authData.userData.id,
           email: authData.userData.email,
+          username: item.username,
         });
         // Navigate to chat
         navigation.navigate('Chat', {id: chat.id});

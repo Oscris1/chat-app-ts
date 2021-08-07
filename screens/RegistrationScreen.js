@@ -7,6 +7,7 @@ import firestore from '@react-native-firebase/firestore';
 const RegistrationScreen = ({navigation}) => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const [fullName, setFullName] = useState();
 
   const register = () => {
     if (!email || !password) return;
@@ -14,8 +15,6 @@ const RegistrationScreen = ({navigation}) => {
       .createUserWithEmailAndPassword(email, password)
       .then(user => {
         console.log('User account created & signed in!');
-        setEmail('');
-        setPassword('');
 
         // Create user document
         firestore()
@@ -24,10 +23,15 @@ const RegistrationScreen = ({navigation}) => {
           .set({
             id: user.user._user.uid,
             email: email,
+            username: fullName,
           })
           .then(() => {
             console.log('User added!');
           });
+
+        setEmail('');
+        setPassword('');
+        setFullName('');
       })
       .catch(error => {
         if (error.code === 'auth/email-already-in-use') {
@@ -49,6 +53,12 @@ const RegistrationScreen = ({navigation}) => {
         onChangeText={setEmail}
         value={email}
         placeholder="Email"
+      />
+      <TextInput
+        style={styles.input}
+        onChangeText={setFullName}
+        value={fullName}
+        placeholder="Full name"
       />
       <TextInput
         style={styles.input}

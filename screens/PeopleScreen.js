@@ -23,11 +23,12 @@ const PeopleScreen = () => {
       const list = [];
       querySnapshot.forEach(documentSnapshot => {
         // data inside the Chat doc
-        const {id, user, email} = documentSnapshot.data();
+        const {id, user, email, username} = documentSnapshot.data();
         list.push({
           id,
           user,
           email,
+          username,
         });
       });
       setChats(list);
