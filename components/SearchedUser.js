@@ -52,6 +52,7 @@ const SearchedUser = ({item, hasChat}) => {
 
   return (
     <View style={styles.container}>
+      <Text>{item.username}</Text>
       <Text>{item.email}</Text>
       {!hasChat && authData.userData.id != item.id && (
         <TouchableOpacity onPress={createChat} style={styles.startChatButton}>
