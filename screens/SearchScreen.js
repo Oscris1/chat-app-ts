@@ -64,13 +64,15 @@ const SearchScreen = () => {
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        onChangeText={setEmailText}
-        value={emailText}
-        placeholder="Search by email"
-      />
-      <Button onPress={searchByEmail} title="Search" color="#AFBBF2" />
+      <View style={styles.searchBox}>
+        <TextInput
+          style={styles.input}
+          onChangeText={setEmailText}
+          value={emailText}
+          placeholder="Search by email"
+        />
+        <Button onPress={searchByEmail} title="Search" color="#AFBBF2" />
+      </View>
       <FlatList
         style={styles.menuList}
         data={searchedUsers}
@@ -88,6 +90,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  searchBox: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    margin: 5,
   },
   input: {
     borderWidth: 1,
