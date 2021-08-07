@@ -52,8 +52,10 @@ const SearchedUser = ({item, hasChat}) => {
 
   return (
     <View style={styles.container}>
-      <Text>{item.username}</Text>
-      <Text>{item.email}</Text>
+      <View>
+        <Text style={styles.username}>{item.username}</Text>
+        <Text>{item.email}</Text>
+      </View>
       {!hasChat && authData.userData.id != item.id && (
         <TouchableOpacity onPress={createChat} style={styles.startChatButton}>
           <Text>Start chat</Text>
@@ -78,6 +80,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: '#64C9CF',
     padding: 5,
+  },
+  username: {
+    fontWeight: '700',
+    fontSize: 18,
   },
 });
 
