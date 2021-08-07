@@ -10,6 +10,7 @@ const ChatListElement = ({id, item}) => {
     <TouchableOpacity
       onPress={() => navigation.navigate('Chat', {id})}
       style={styles.container}>
+      <Text style={styles.username}>{item.username}</Text>
       <Text>{item.email}</Text>
     </TouchableOpacity>
   );
@@ -24,9 +25,11 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 20,
     justifyContent: 'center',
-    alignItems: 'center',
     borderWidth: 1,
-    flexDirection: 'row',
+  },
+  username: {
+    fontWeight: '700',
+    fontSize: 18,
   },
 });
 
