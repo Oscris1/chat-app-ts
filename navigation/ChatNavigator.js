@@ -14,7 +14,11 @@ const ChatNavigator = () => {
         component={PeopleScreen}
         options={{headerShown: false}}
       />
-      <ChatStack.Screen name="Chat" component={ChatScreen} />
+      <ChatStack.Screen
+        name="Chat"
+        component={ChatScreen}
+        options={({route}) => ({title: route.params.username})}
+      />
     </ChatStack.Navigator>
   );
 };

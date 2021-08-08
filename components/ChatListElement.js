@@ -8,7 +8,7 @@ const ChatListElement = ({id, item}) => {
   const navigation = useNavigation();
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate('Chat', {id})}
+      onPress={() => navigation.navigate('Chat', {id, username: item.username})}
       style={styles.container}>
       <Text style={styles.username}>{item.username}</Text>
       <Text>{item.email}</Text>
