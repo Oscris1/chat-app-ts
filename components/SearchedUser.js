@@ -21,6 +21,7 @@ const SearchedUser = ({item, hasChat}) => {
   // create chat handler
   const createChat = () => {
     if (hasChat) return;
+
     //create chat
     firestore()
       .collection('Chats')
@@ -39,14 +40,26 @@ const SearchedUser = ({item, hasChat}) => {
           });
 
         // add chat to selected user
-        firestore().collection('Users').doc(item.id).collection('Chats').add({
-          id: chat.id,
-          user: authData.userData.id,
-          email: authData.userData.email,
-          username: item.username,
-        });
+        firestore()
+          .collection('Users')
+          .doc(authData.userData.id)
+          .get()
+          .then(loggedUserData => {
+            const {email, username} = loggedUserData.data();
+            firestore()
+              .collection('Users')
+              .doc(item.id)
+              .collection('Chats')
+              .add({
+                id: chat.id,
+                user: authData.userData.id,
+                email,
+                username,
+              });
+          });
+
         // Navigate to chat
-        navigation.navigate('Chat', {id: chat.id});
+        navigation.navigate('Chat', {id: chat.id, username: item.username});
       });
   };
 
