@@ -11,12 +11,16 @@ import {
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
+import ErrorMessageBox from '../components/ErrorMessageBox';
+
 const RegistrationScreen = ({navigation}) => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [fullName, setFullName] = useState();
+  const [errorMessage, setErrorMessage] = useState();
 
   const register = () => {
+    setErrorMessage();
     if (!email || !password) return;
     auth()
       .createUserWithEmailAndPassword(email, password)
@@ -43,18 +47,24 @@ const RegistrationScreen = ({navigation}) => {
       .catch(error => {
         if (error.code === 'auth/email-already-in-use') {
           console.log('That email address is already in use!');
+          setErrorMessage('That email address is already in use!');
         }
 
         if (error.code === 'auth/invalid-email') {
           console.log('That email address is invalid!');
+          setErrorMessage('That email address is invalid!');
         }
 
+        setEmail('');
+        setPassword('');
+        setFullName('');
         console.error(error);
       });
   };
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>Register</Text>
+      {errorMessage && <ErrorMessageBox errorMessage={errorMessage} />}
       <TextInput
         style={styles.input}
         onChangeText={setEmail}
