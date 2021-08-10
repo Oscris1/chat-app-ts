@@ -50,18 +50,21 @@ const LogInScreen = ({navigation}) => {
         if (error.code === 'auth/invalid-email') {
           console.log('Invalid email!');
           setErrorMessage('Invalid email!');
+          setEmail('');
+          setPassword('');
         }
         if (error.code === 'auth/wrong-password') {
           console.log('Wrong Password!');
           setErrorMessage('Wrong Password!');
+          setPassword('');
         }
         if (error.code === 'auth/user-not-found') {
           console.log("User doesn't exist!");
           setErrorMessage("User doesn't exist!");
+          setEmail('');
+          setPassword('');
         }
         console.error(error);
-        setEmail('');
-        setPassword('');
       });
   };
   return (
