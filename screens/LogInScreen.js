@@ -11,12 +11,14 @@ import auth from '@react-native-firebase/auth';
 import {useSelector, useDispatch} from 'react-redux';
 
 import {logIn} from '../store/auth-slice';
+import ErrorMessageBox from '../components/ErrorMessageBox';
 
 const LogInScreen = ({navigation}) => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [initializing, setInitializing] = useState(true);
+  const [errorMessage, setErrorMessage] = useState();
 
   // Handle user state changes
   function onAuthStateChanged(user) {
@@ -35,6 +37,7 @@ const LogInScreen = ({navigation}) => {
   if (initializing) return null;
 
   const login = () => {
+    setErrorMessage();
     if (!email || !password) return;
     auth()
       .signInWithEmailAndPassword(email, password)
@@ -46,12 +49,15 @@ const LogInScreen = ({navigation}) => {
       .catch(error => {
         if (error.code === 'auth/invalid-email') {
           console.log('Invalid email!');
+          setErrorMessage('Invalid email!');
         }
         if (error.code === 'auth/wrong-password') {
           console.log('Wrong Password!');
+          setErrorMessage('Wrong Password!');
         }
         if (error.code === 'auth/user-not-found') {
           console.log("User doesn't exist!");
+          setErrorMessage("User doesn't exist!");
         }
         console.error(error);
         setEmail('');
@@ -61,6 +67,8 @@ const LogInScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>Log In</Text>
+
+      {errorMessage && <ErrorMessageBox errorMessage={errorMessage} />}
       <TextInput
         style={styles.input}
         onChangeText={setEmail}
