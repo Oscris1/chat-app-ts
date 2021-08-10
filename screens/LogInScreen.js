@@ -20,6 +20,11 @@ const LogInScreen = ({navigation}) => {
   const [initializing, setInitializing] = useState(true);
   const [errorMessage, setErrorMessage] = useState();
 
+  const createNewAccountButtonHandler = () => {
+    navigation.navigate('Register');
+    setErrorMessage();
+  };
+
   // Handle user state changes
   function onAuthStateChanged(user) {
     if (user) {
@@ -35,7 +40,6 @@ const LogInScreen = ({navigation}) => {
   }, []);
 
   if (initializing) return null;
-
   const login = () => {
     setErrorMessage();
     if (!email || !password) return;
@@ -94,7 +98,7 @@ const LogInScreen = ({navigation}) => {
       {/* Navigate to registration screen button */}
       <TouchableOpacity
         style={styles.emptyButton}
-        onPress={() => navigation.navigate('Register')}>
+        onPress={createNewAccountButtonHandler}>
         <Text style={styles.emptyButtonText}>Create New Account</Text>
       </TouchableOpacity>
     </View>
