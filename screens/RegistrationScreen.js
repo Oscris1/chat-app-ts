@@ -1,5 +1,12 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, Button, TextInput} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Button,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native';
 
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
@@ -67,12 +74,18 @@ const RegistrationScreen = ({navigation}) => {
         placeholder="Password"
         secureTextEntry={true}
       />
-      <Button onPress={register} title="Register" color="green" />
-      <Button
-        onPress={() => navigation.navigate('LogIn')}
-        title="Log In page"
-        color="#AFBBF2"
-      />
+
+      {/* Register Button */}
+      <TouchableOpacity style={styles.blackButton} onPress={register}>
+        <Text style={styles.blackButtonText}>Register</Text>
+      </TouchableOpacity>
+
+      {/* Navigate to log in screen button */}
+      <TouchableOpacity
+        style={styles.emptyButton}
+        onPress={() => navigation.navigate('LogIn')}>
+        <Text style={styles.emptyButtonText}>Log In page</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -87,10 +100,39 @@ const styles = StyleSheet.create({
     fontSize: 50,
   },
   input: {
-    borderWidth: 1,
-    borderColor: '#AFBBF2',
+    borderWidth: 2,
+    padding: 8,
+    borderColor: '#082032',
+    borderRadius: 10,
+    width: '70%',
+    marginVertical: 8,
+  },
+  blackButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#082032',
+    borderRadius: 10,
     width: '70%',
     margin: 2,
+    marginVertical: 8,
+    paddingVertical: 8,
+  },
+  blackButtonText: {
+    color: '#fff',
+    fontSize: 18,
+  },
+  emptyButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '70%',
+    margin: 2,
+    marginVertical: 8,
+    paddingVertical: 8,
+  },
+  emptyButtonText: {
+    color: '#082032',
+    fontSize: 14,
+    textDecorationLine: 'underline',
   },
 });
 
