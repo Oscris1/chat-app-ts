@@ -41,7 +41,7 @@ const PeopleScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text>People Screen, Chats list</Text>
+      <Text style={styles.messageText}>Messages</Text>
 
       <FlatList
         style={styles.menuList}
@@ -57,11 +57,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    //alignItems: 'center',
   },
   menuList: {
     borderTopWidth: 1,
     borderColor: '#DAD0C2',
+  },
+  messageText: {
+    padding: 10,
+    marginLeft: 6,
+    fontWeight: '700',
+    fontSize: 22,
   },
 });
 
