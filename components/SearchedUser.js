@@ -9,10 +9,9 @@ import {
 
 import {useNavigation} from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
-import {useSelector, useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
 
 const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
 
 const SearchedUser = ({item, hasChat}) => {
   const authData = useSelector(state => state.auth);

@@ -3,7 +3,7 @@ import {GiftedChat, Bubble} from 'react-native-gifted-chat';
 
 import firestore from '@react-native-firebase/firestore';
 
-import {useSelector, useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
 
 import {useRoute} from '@react-navigation/native';
 

@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, TextInput, Button, FlatList} from 'react-native';
 
-import {useSelector, useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
 
 import firestore from '@react-native-firebase/firestore';
 

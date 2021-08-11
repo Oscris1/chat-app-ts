@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, Button, FlatList} from 'react-native';
-import {useSelector, useDispatch} from 'react-redux';
+import {View, Text, StyleSheet, FlatList} from 'react-native';
+import {useSelector} from 'react-redux';
 import firestore from '@react-native-firebase/firestore';
 
 import ChatListElement from '../components/ChatListElement';

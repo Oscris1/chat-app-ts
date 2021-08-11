@@ -1,17 +1,10 @@
-import React, {useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Button,
-  TouchableOpacity,
-  Image,
-} from 'react-native';
+import React from 'react';
+import {View, StyleSheet, Button} from 'react-native';
 import auth from '@react-native-firebase/auth';
 
 import {logOutState} from '../store/auth-slice';
 
-import {useSelector, useDispatch} from 'react-redux';
+import {useDispatch} from 'react-redux';
 
 import ImageSelector from '../components/ImageSelector';
 
