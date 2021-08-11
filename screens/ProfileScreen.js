@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Button} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
 import auth from '@react-native-firebase/auth';
 
 import {logOutState} from '../store/auth-slice';
@@ -24,9 +24,10 @@ const ProfileScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       <ImageSelector />
-      <View style={styles.logOutBox}>
-        <Button onPress={logOut} title="Log out" color="#AFBBF2" />
-      </View>
+      {/* LogOut Button */}
+      <TouchableOpacity style={styles.blackButton} onPress={logOut}>
+        <Text style={styles.blackButtonText}>Log out</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -37,9 +38,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-around',
   },
-  logOutBox: {
+  blackButton: {
+    position: 'absolute',
+    bottom: 0,
     justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#082032',
+    borderRadius: 10,
     width: '70%',
+    margin: 2,
+    marginVertical: 8,
+    paddingVertical: 8,
+  },
+  blackButtonText: {
+    color: '#fff',
+    fontSize: 18,
   },
 });
 
