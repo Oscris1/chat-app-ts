@@ -59,6 +59,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  menuList: {
+    borderTopWidth: 1,
+    borderColor: '#DAD0C2',
+  },
 });
 
 export default PeopleScreen;

@@ -18,14 +18,11 @@ const ChatListElement = ({id, item}) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor:
-      'hsl(211.01694915254237, 50.86206896551724%, 80.50980392156863%)',
-    width: windowWidth - 40,
-    margin: 5,
+    width: windowWidth,
     padding: 15,
-    borderRadius: 20,
     justifyContent: 'center',
-    borderWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: '#D1D9D9',
   },
   username: {
     fontWeight: '700',
