@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   TouchableOpacity,
   Dimensions,
@@ -9,24 +9,48 @@ import {
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
+import firestore from '@react-native-firebase/firestore';
+
 const windowWidth = Dimensions.get('window').width;
 
 const ChatListElement = ({id, item}) => {
+  const [user, setUser] = useState({});
+  useEffect(() => {
+    firestore()
+      .collection('Users')
+      .doc(item.user)
+      .get()
+      .then(userData => {
+        setUser(userData.data());
+      });
+  }, []);
+
   const navigation = useNavigation();
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate('Chat', {id, username: item.username})}
-      style={styles.container}>
-      {/**To do -> change to user image */}
+      style={styles.container}
+      onPress={() =>
+        navigation.navigate('Chat', {
+          id,
+          username: user.username,
+          avatar:
+            user.avatar ||
+            'https://firebasestorage.googleapis.com/v0/b/chat-app-c20dd.appspot.com/o/defAvatar.jpg?alt=media&token=44212c24-deb3-41f2-9251-7931f53d18fa',
+        })
+      }>
+      {/** display user's avatar, else if user doesn't have avatar  display default image */}
       <Image
         style={styles.tinyLogo}
         source={{
-          uri: 'https://firebasestorage.googleapis.com/v0/b/chat-app-c20dd.appspot.com/o/defAvatar.jpg?alt=media&token=44212c24-deb3-41f2-9251-7931f53d18fa',
+          uri:
+            user.avatar ||
+            'https://firebasestorage.googleapis.com/v0/b/chat-app-c20dd.appspot.com/o/defAvatar.jpg?alt=media&token=44212c24-deb3-41f2-9251-7931f53d18fa',
         }}
       />
+
       <View style={styles.textBox}>
-        <Text style={styles.username}>{item.username}</Text>
-        <Text>{item.email}</Text>
+        <Text style={styles.username}>{user.username}</Text>
+        <Text>{user.email}</Text>
       </View>
 
       {/**To do -> change to last message time */}
