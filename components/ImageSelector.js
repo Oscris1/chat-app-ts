@@ -1,9 +1,15 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import storage from '@react-native-firebase/storage';
+import firestore from '@react-native-firebase/firestore';
 import ImagePicker from 'react-native-image-crop-picker';
+
+import {useSelector} from 'react-redux';
 
 const ImageSelector = () => {
   const [image, setImage] = useState();
+  const authData = useSelector(state => state.auth);
+  const reference = storage().ref(`/avatars/${authData.userData.id}.jpg`);
 
   const choosePhoto = () => {
     ImagePicker.openPicker({
@@ -12,7 +18,31 @@ const ImageSelector = () => {
       cropping: false,
     }).then(image => {
       setImage(image.path);
+      {
+        // Try it later
+        /**  const profileImageRef = `${authData.userData.id}.${
+        image.mime.split('/')[1]
+      }`;
+      reference = storage().ref(`/avatars/${profileImageRef}`);
+      */
+      }
     });
+  };
+
+  const uploadImage = async () => {
+    const task = await reference.putFile(image);
+    setImage();
+    const url = await reference.getDownloadURL();
+    console.log(url);
+    firestore()
+      .collection('Users')
+      .doc(authData.userData.id)
+      .update({
+        avatar: url,
+      })
+      .then(() => {
+        console.log('Avatar updated!');
+      });
   };
 
   return (
@@ -38,9 +68,7 @@ const ImageSelector = () => {
           <Text>Do you want to change your profile picture?</Text>
           <View style={styles.decisionButtonsContainer}>
             {/** Accept button */}
-            <TouchableOpacity
-              style={styles.acceptButton}
-              onPress={() => console.log('accept')}>
+            <TouchableOpacity style={styles.acceptButton} onPress={uploadImage}>
               <Text style={styles.acceptButtonText}>Accept</Text>
             </TouchableOpacity>
 
