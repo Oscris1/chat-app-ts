@@ -11,6 +11,7 @@ const ImageSelector = () => {
   const authData = useSelector(state => state.auth);
   const reference = storage().ref(`/avatars/${authData.userData.id}.jpg`);
 
+  // Select photo from gallery
   const choosePhoto = () => {
     ImagePicker.openPicker({
       width: 200,
@@ -29,10 +30,16 @@ const ImageSelector = () => {
     });
   };
 
+  // Send image to firebase storage and update it's url in the user database object
   const uploadImage = async () => {
+    //Send image to firebase storage
     const task = await reference.putFile(image);
     setImage();
+
+    // retreive image url
     const url = await reference.getDownloadURL();
+
+    // update avatar field
     console.log(url);
     firestore()
       .collection('Users')
