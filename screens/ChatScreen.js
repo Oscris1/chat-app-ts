@@ -17,6 +17,10 @@ const ChatScreen = () => {
 
   const ref = firestore().collection('Chats').doc(id).collection('Messages');
 
+  const avatar =
+    authData.userData.avatar ||
+    'https://firebasestorage.googleapis.com/v0/b/chat-app-c20dd.appspot.com/o/defAvatar.jpg?alt=media&token=44212c24-deb3-41f2-9251-7931f53d18fa';
+
   // fetch messages
   useEffect(() => {
     return ref.orderBy('createdAt', 'desc').onSnapshot(querySnapshot => {
@@ -54,6 +58,7 @@ const ChatScreen = () => {
 
   return (
     <GiftedChat
+      showUserAvatar={true}
       renderBubble={props => {
         return (
           <Bubble
@@ -76,6 +81,7 @@ const ChatScreen = () => {
       user={{
         _id: authData.userData.id,
         name: authData.userData.email,
+        avatar: avatar,
       }}
     />
   );
