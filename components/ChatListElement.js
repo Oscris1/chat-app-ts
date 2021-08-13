@@ -15,6 +15,7 @@ const windowWidth = Dimensions.get('window').width;
 
 const ChatListElement = ({id, item}) => {
   const [user, setUser] = useState({});
+  const [message, setMessage] = useState();
   useEffect(() => {
     firestore()
       .collection('Users')
@@ -22,6 +23,15 @@ const ChatListElement = ({id, item}) => {
       .get()
       .then(userData => {
         setUser(userData.data());
+      });
+  }, []);
+
+  useEffect(() => {
+    return firestore()
+      .collection('Chats')
+      .doc(id)
+      .onSnapshot(documentSnapshot => {
+        setMessage(documentSnapshot.data().lastMessage);
       });
   }, []);
 
@@ -47,11 +57,14 @@ const ChatListElement = ({id, item}) => {
 
       <View style={styles.textBox}>
         <Text style={styles.username}>{user.username}</Text>
-        <Text>{user.email}</Text>
+        {/** ToDo - crop a message */}
+        <Text>{message && message.text}</Text>
       </View>
 
       {/**To do -> change to last message time */}
-      <Text style={styles.time}>21:22</Text>
+      <Text style={styles.time}>
+        {message && message.createdAt.toDate().toTimeString().split(' ')[0]}
+      </Text>
     </TouchableOpacity>
   );
 };

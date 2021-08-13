@@ -54,6 +54,17 @@ const ChatScreen = () => {
       text,
       user,
     });
+    firestore()
+      .collection('Chats')
+      .doc(id)
+      .update({
+        lastMessage: {
+          _id,
+          createdAt,
+          text,
+          user: user._id,
+        },
+      });
   }, []);
 
   return (
