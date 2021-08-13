@@ -37,7 +37,7 @@ const PeopleScreen = () => {
         setLoading(false);
       }
     });
-  }, []);
+  }, [authData.status]);
 
   return (
     <View style={styles.container}>

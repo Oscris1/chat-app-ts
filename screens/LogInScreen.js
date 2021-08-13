@@ -9,7 +9,7 @@ import {
 import auth from '@react-native-firebase/auth';
 import {useSelector, useDispatch} from 'react-redux';
 
-import {logIn} from '../store/auth-slice';
+import {getUser} from '../store/auth-slice';
 import ErrorMessageBox from '../components/ErrorMessageBox';
 
 const LogInScreen = ({navigation}) => {
@@ -27,7 +27,7 @@ const LogInScreen = ({navigation}) => {
   // Handle user state changes
   function onAuthStateChanged(user) {
     if (user) {
-      dispatch(logIn(user._user));
+      dispatch(getUser(user._user.uid));
       navigation.navigate('Main');
     }
     if (initializing) setInitializing(false);
