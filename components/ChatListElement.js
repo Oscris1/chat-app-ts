@@ -63,8 +63,13 @@ const ChatListElement = ({id, item}) => {
 
       <View style={styles.textBox}>
         <Text style={styles.username}>{user.username}</Text>
-        {/** ToDo - crop a message */}
-        <Text>{message && message.text}</Text>
+        {/** crop a message if length >= 30 */}
+        <Text>
+          {message &&
+            `${message.text.substring(0, 30)} ${
+              message.text.length >= 30 && '...'
+            }`}
+        </Text>
       </View>
 
       {/** Last message timer */}
