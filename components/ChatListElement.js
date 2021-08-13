@@ -33,9 +33,6 @@ const ChatListElement = ({id, item}) => {
         navigation.navigate('Chat', {
           id,
           username: user.username,
-          avatar:
-            user.avatar ||
-            'https://firebasestorage.googleapis.com/v0/b/chat-app-c20dd.appspot.com/o/defAvatar.jpg?alt=media&token=44212c24-deb3-41f2-9251-7931f53d18fa',
         })
       }>
       {/** display user's avatar, else if user doesn't have avatar  display default image */}
