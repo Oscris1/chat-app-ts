@@ -14,8 +14,13 @@ import firestore from '@react-native-firebase/firestore';
 const windowWidth = Dimensions.get('window').width;
 
 const ChatListElement = ({id, item}) => {
+  // state of selected user
   const [user, setUser] = useState({});
+
+  // state of last message
   const [message, setMessage] = useState();
+
+  // fetch data of selected user
   useEffect(() => {
     firestore()
       .collection('Users')
@@ -26,6 +31,7 @@ const ChatListElement = ({id, item}) => {
       });
   }, []);
 
+  //fetch last message info
   useEffect(() => {
     return firestore()
       .collection('Chats')
@@ -42,7 +48,7 @@ const ChatListElement = ({id, item}) => {
       onPress={() =>
         navigation.navigate('Chat', {
           id,
-          username: user.username,
+          username: user.username, // data to display username in ChatScreen header
         })
       }>
       {/** display user's avatar, else if user doesn't have avatar  display default image */}
@@ -61,7 +67,7 @@ const ChatListElement = ({id, item}) => {
         <Text>{message && message.text}</Text>
       </View>
 
-      {/**To do -> change to last message time */}
+      {/** Last message timer */}
       <Text style={styles.time}>
         {message && message.createdAt.toDate().toTimeString().split(' ')[0]}
       </Text>
