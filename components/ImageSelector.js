@@ -4,10 +4,12 @@ import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
 import ImagePicker from 'react-native-image-crop-picker';
 
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
+import {updatePhotoState} from '../store/auth-slice';
 
 const ImageSelector = () => {
   const [image, setImage] = useState();
+  const dispatch = useDispatch();
   const authData = useSelector(state => state.auth);
   const reference = storage().ref(`/avatars/${authData.userData.id}.jpg`);
 
@@ -49,6 +51,8 @@ const ImageSelector = () => {
       })
       .then(() => {
         console.log('Avatar updated!');
+        // update redux state
+        dispatch(updatePhotoState({avatar: url}));
       });
   };
 

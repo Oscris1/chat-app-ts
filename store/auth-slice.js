@@ -34,6 +34,10 @@ const authSlice = createSlice({
       state.userData.avatar = undefined;
       state.status = null;
     },
+    updatePhotoState(state, {payload}) {
+      //photo state
+      state.userData.avatar = payload.avatar;
+    },
   },
   extraReducers: {
     [getUser.pending]: state => {
@@ -53,5 +57,5 @@ const authSlice = createSlice({
   },
 });
 
-export const {logOutState} = authSlice.actions;
+export const {logOutState, updatePhotoState} = authSlice.actions;
 export default authSlice;
