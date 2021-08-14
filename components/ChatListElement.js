@@ -20,6 +20,9 @@ const ChatListElement = ({id, item}) => {
   // state of last message
   const [message, setMessage] = useState();
 
+  const defaultAvatar =
+    'https://firebasestorage.googleapis.com/v0/b/chat-app-c20dd.appspot.com/o/defAvatar.jpg?alt=media&token=44212c24-deb3-41f2-9251-7931f53d18fa';
+
   // fetch data of selected user
   useEffect(() => {
     firestore()
@@ -42,6 +45,7 @@ const ChatListElement = ({id, item}) => {
   }, []);
 
   const navigation = useNavigation();
+
   return (
     <TouchableOpacity
       style={styles.container}
@@ -49,15 +53,14 @@ const ChatListElement = ({id, item}) => {
         navigation.navigate('Chat', {
           id,
           username: user.username, // data to display username in ChatScreen header
+          friendAvatar: user.avatar || defaultAvatar, // friend's avatar in Chat Screen
         })
       }>
       {/** display user's avatar, else if user doesn't have avatar  display default image */}
       <Image
         style={styles.tinyLogo}
         source={{
-          uri:
-            user.avatar ||
-            'https://firebasestorage.googleapis.com/v0/b/chat-app-c20dd.appspot.com/o/defAvatar.jpg?alt=media&token=44212c24-deb3-41f2-9251-7931f53d18fa',
+          uri: user.avatar || defaultAvatar,
         }}
       />
 

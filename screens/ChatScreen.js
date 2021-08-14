@@ -13,7 +13,7 @@ const ChatScreen = () => {
   const [loading, setLoading] = useState(true);
   const [messages, setMessages] = useState([]);
 
-  const {id} = route.params;
+  const {id, friendAvatar} = route.params;
 
   const ref = firestore().collection('Chats').doc(id).collection('Messages');
 
@@ -27,6 +27,15 @@ const ChatScreen = () => {
       const list = [];
       querySnapshot.forEach(doc => {
         const {_id, createdAt, text, user} = doc.data();
+
+        // Works only with two users
+        // display logged user avatar
+        if (user._id === authData.userData.id) {
+          user.avatar = avatar;
+        } else {
+          // display second user avatar
+          user.avatar = friendAvatar;
+        }
         list.push({
           _id,
           createdAt: createdAt.toDate(),
@@ -54,6 +63,8 @@ const ChatScreen = () => {
       text,
       user,
     });
+
+    // update last message field in chat doc
     firestore()
       .collection('Chats')
       .doc(id)
@@ -92,7 +103,7 @@ const ChatScreen = () => {
       user={{
         _id: authData.userData.id,
         name: authData.userData.email,
-        avatar: avatar,
+        avatar: avatar, // without this there is a small bug with refreshing avatar -> try do something later
       }}
     />
   );
