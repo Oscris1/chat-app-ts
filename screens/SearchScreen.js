@@ -1,5 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, TextInput, Button, FlatList} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TextInput,
+  Text,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
 
 import {useSelector} from 'react-redux';
 
@@ -71,7 +78,9 @@ const SearchScreen = () => {
           value={emailText}
           placeholder="Search by email"
         />
-        <Button onPress={searchByEmail} title="Search" color="#AFBBF2" />
+        <TouchableOpacity style={styles.blackButton} onPress={searchByEmail}>
+          <Text style={styles.blackButtonText}>Search</Text>
+        </TouchableOpacity>
       </View>
       <FlatList
         style={styles.menuList}
@@ -94,14 +103,30 @@ const styles = StyleSheet.create({
   },
   searchBox: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     margin: 5,
   },
   input: {
-    borderWidth: 1,
-    borderColor: '#AFBBF2',
-    width: '70%',
+    borderWidth: 2,
+    padding: 8,
+    borderColor: '#082032',
+    borderRadius: 10,
+    width: '60%',
+    marginVertical: 8,
+  },
+  blackButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#082032',
+    borderRadius: 10,
+    width: '20%',
     margin: 2,
+    marginVertical: 8,
+    paddingVertical: 8,
+  },
+  blackButtonText: {
+    color: '#fff',
+    fontSize: 18,
   },
 });
 
