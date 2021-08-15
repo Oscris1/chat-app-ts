@@ -27,10 +27,15 @@ const LogInScreen = ({navigation}) => {
   // Handle user state changes
   function onAuthStateChanged(user) {
     if (user) {
-      dispatch(getUser(user._user.uid));
-      navigation.navigate('Main');
+      dispatch(getUser(user._user.uid)).then(response => {
+        if (response.meta.requestStatus == 'fulfilled') {
+          if (initializing) setInitializing(false);
+          navigation.navigate('Main');
+        }
+      });
+    } else {
+      if (initializing) setInitializing(false);
     }
-    if (initializing) setInitializing(false);
   }
 
   useEffect(() => {
