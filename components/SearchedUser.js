@@ -79,7 +79,7 @@ const SearchedUser = ({item, hasChat}) => {
       </View>
       {!hasChat && authData.userData.id != item.id && (
         <TouchableOpacity onPress={createChat} style={styles.startChatButton}>
-          <Text>Start chat</Text>
+          <Text style={styles.startChatButtonText}>Start chat</Text>
         </TouchableOpacity>
       )}
     </View>
@@ -97,11 +97,6 @@ const styles = StyleSheet.create({
   userDataBox: {
     flexDirection: 'row',
   },
-  startChatButton: {
-    borderRadius: 10,
-    backgroundColor: '#64C9CF',
-    padding: 5,
-  },
   username: {
     fontWeight: '700',
     fontSize: 18,
@@ -112,6 +107,20 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 50 / 2,
     marginHorizontal: 4,
+  },
+  startChatButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor:
+      'hsl(205.71428571428572, 72.41379310344827%, 19.372549019607844%)',
+    borderRadius: 10,
+    width: '23%',
+    marginHorizontal: 5,
+    paddingVertical: 8,
+  },
+  startChatButtonText: {
+    color: '#fff',
+    fontSize: 14,
   },
 });
 
