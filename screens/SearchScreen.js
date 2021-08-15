@@ -14,6 +14,9 @@ import firestore from '@react-native-firebase/firestore';
 
 import SearchedUser from '../components/SearchedUser';
 
+const defaultAvatar =
+  'https://firebasestorage.googleapis.com/v0/b/chat-app-c20dd.appspot.com/o/defAvatar.jpg?alt=media&token=44212c24-deb3-41f2-9251-7931f53d18fa';
+
 const SearchScreen = () => {
   const [emailText, setEmailText] = useState('');
   const [searchedUsers, setSearchedUsers] = useState([]);
@@ -55,7 +58,7 @@ const SearchScreen = () => {
       .then(users => {
         const list = [];
         users.forEach(doc => {
-          const {email, username} = doc.data();
+          const {email, username, avatar} = doc.data();
           const id = doc._ref.id;
           console.log(email);
           console.log(id);
@@ -63,6 +66,7 @@ const SearchScreen = () => {
             id,
             email,
             username,
+            avatar: avatar || defaultAvatar,
           });
         });
         setSearchedUsers(list);
@@ -83,7 +87,7 @@ const SearchScreen = () => {
         </TouchableOpacity>
       </View>
       <FlatList
-        style={styles.menuList}
+        style={styles.usersList}
         data={searchedUsers}
         renderItem={({item}) => (
           <SearchedUser item={item} hasChat={chatUsers.includes(item.id)} />
@@ -105,13 +109,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     margin: 5,
+    marginBottom: 2,
   },
   input: {
     borderWidth: 2,
     padding: 8,
     borderColor: '#082032',
     borderRadius: 10,
-    width: '60%',
+    width: '70%',
     marginVertical: 8,
   },
   blackButton: {

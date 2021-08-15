@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 
 import {useNavigation} from '@react-navigation/native';
@@ -64,9 +65,17 @@ const SearchedUser = ({item, hasChat}) => {
 
   return (
     <View style={styles.container}>
-      <View>
-        <Text style={styles.username}>{item.username}</Text>
-        <Text>{item.email}</Text>
+      <View style={styles.userDataBox}>
+        <Image
+          style={styles.tinyLogo}
+          source={{
+            uri: item.avatar,
+          }}
+        />
+        <View>
+          <Text style={styles.username}>{item.username}</Text>
+          <Text>{item.email}</Text>
+        </View>
       </View>
       {!hasChat && authData.userData.id != item.id && (
         <TouchableOpacity onPress={createChat} style={styles.startChatButton}>
@@ -79,13 +88,13 @@ const SearchedUser = ({item, hasChat}) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: windowWidth - 40,
-    margin: 5,
+    width: windowWidth,
     padding: 15,
-    borderRadius: 20,
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderWidth: 1,
+    flexDirection: 'row',
+  },
+  userDataBox: {
     flexDirection: 'row',
   },
   startChatButton: {
@@ -96,6 +105,13 @@ const styles = StyleSheet.create({
   username: {
     fontWeight: '700',
     fontSize: 18,
+    marginHorizontal: 4,
+  },
+  tinyLogo: {
+    width: 50,
+    height: 50,
+    borderRadius: 50 / 2,
+    marginHorizontal: 4,
   },
 });
 
