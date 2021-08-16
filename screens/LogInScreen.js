@@ -14,9 +14,11 @@ import ErrorMessageBox from '../components/ErrorMessageBox';
 
 const LogInScreen = ({navigation}) => {
   const dispatch = useDispatch();
+  const authData = useSelector(state => state.auth);
+
+  const [initializing, setInitializing] = useState(true);
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
-  const [initializing, setInitializing] = useState(true);
   const [errorMessage, setErrorMessage] = useState();
 
   const createNewAccountButtonHandler = () => {
@@ -27,15 +29,15 @@ const LogInScreen = ({navigation}) => {
   // Handle user state changes
   function onAuthStateChanged(user) {
     if (user) {
-      dispatch(getUser(user._user.uid)).then(response => {
-        if (response.meta.requestStatus == 'fulfilled') {
-          if (initializing) setInitializing(false);
-          navigation.navigate('Main');
-        }
-      });
-    } else {
-      if (initializing) setInitializing(false);
+      const freshAccount =
+        Date.now() - user._user.metadata.creationTime < 15000;
+
+      // TO DO -> find another solution
+      if (freshAccount) {
+        setTimeout(() => dispatch(getUser(user._user.uid)), 2000); // wait 2 seconds for doc creation
+      } else dispatch(getUser(user._user.uid));
     }
+    if (initializing) setInitializing(false);
   }
 
   useEffect(() => {
@@ -43,7 +45,12 @@ const LogInScreen = ({navigation}) => {
     return subscriber; // unsubscribe on unmount
   }, []);
 
-  if (initializing) return null;
+  useEffect(() => {
+    if (authData.status === 'success') {
+      navigation.navigate('Main');
+    }
+  }, [authData.status]);
+
   const login = () => {
     setErrorMessage();
     if (!email || !password) return;
@@ -75,6 +82,9 @@ const LogInScreen = ({navigation}) => {
         console.error(error);
       });
   };
+
+  if (initializing) return null;
+
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>Log In</Text>
