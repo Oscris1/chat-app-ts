@@ -2,14 +2,15 @@ import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import firestore from '@react-native-firebase/firestore';
 
 export const getUser = createAsyncThunk('auth/getUser', async userId => {
-  const promise = firestore()
+  console.log(userId);
+  const data = await firestore()
     .collection('Users')
     .doc(userId)
     .get()
     .then(userData => {
+      console.log(userData.data());
       return userData.data();
     });
-  const data = await promise;
   return data;
 });
 
@@ -19,19 +20,19 @@ const authSlice = createSlice({
     status: null,
     logged: false,
     userData: {
-      id: undefined,
-      email: undefined,
-      username: undefined,
-      avatar: undefined,
+      id: null,
+      email: null,
+      username: null,
+      avatar: null,
     },
   },
   reducers: {
     logOutState(state, action) {
       state.logged = false;
-      state.userData.id = undefined;
-      state.userData.email = undefined;
-      state.userData.username = undefined;
-      state.userData.avatar = undefined;
+      state.userData.id = null;
+      state.userData.email = null;
+      state.userData.username = null;
+      state.userData.avatar = null;
       state.status = null;
     },
     updatePhotoState(state, {payload}) {
