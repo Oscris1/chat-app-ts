@@ -2,13 +2,11 @@ import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import firestore from '@react-native-firebase/firestore';
 
 export const getUser = createAsyncThunk('auth/getUser', async userId => {
-  console.log(userId);
   const data = await firestore()
     .collection('Users')
     .doc(userId)
     .get()
     .then(userData => {
-      console.log(userData.data());
       return userData.data();
     });
   return data;

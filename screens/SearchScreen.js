@@ -62,8 +62,6 @@ const SearchScreen = () => {
         users.forEach(doc => {
           const {email, username, avatar} = doc.data();
           const id = doc._ref.id;
-          console.log(email);
-          console.log(id);
           list.push({
             id,
             email,
