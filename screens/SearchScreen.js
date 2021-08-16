@@ -6,6 +6,7 @@ import {
   Text,
   FlatList,
   TouchableOpacity,
+  Keyboard,
 } from 'react-native';
 
 import {useSelector} from 'react-redux';
@@ -50,6 +51,7 @@ const SearchScreen = () => {
 
   // search user by email
   const searchByEmail = () => {
+    Keyboard.dismiss();
     firestore()
       .collection('Users')
       .where('email', '>=', emailText)
