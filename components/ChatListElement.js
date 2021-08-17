@@ -54,6 +54,7 @@ const ChatListElement = ({id, item}) => {
           id,
           username: user.username, // data to display username in ChatScreen header
           friendAvatar: user.avatar || defaultAvatar, // friend's avatar in Chat Screen
+          userId: user.id, // selected user id -> update last message
         })
       }>
       {/** display user's avatar, else if user doesn't have avatar  display default image */}

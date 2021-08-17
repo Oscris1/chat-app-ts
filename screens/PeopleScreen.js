@@ -10,7 +10,6 @@ const PeopleScreen = () => {
 
   const [loading, setLoading] = useState(true);
   const [chats, setChats] = useState([]);
-  // const ref = firestore().collection('Chats');
   const ref = firestore()
     .collection('Users')
     .doc(authData.userData.id)
@@ -18,7 +17,7 @@ const PeopleScreen = () => {
 
   // fetch Chats
   useEffect(() => {
-    return ref.onSnapshot(querySnapshot => {
+    return ref.orderBy('lastUpdate', 'desc').onSnapshot(querySnapshot => {
       // List of user's chats
       const list = [];
       querySnapshot.forEach(documentSnapshot => {
@@ -56,7 +55,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     backgroundColor: '#fff',
-    //alignItems: 'center',
   },
   menuList: {
     borderTopWidth: 1,

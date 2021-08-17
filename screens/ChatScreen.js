@@ -13,7 +13,7 @@ const ChatScreen = () => {
   const [loading, setLoading] = useState(true);
   const [messages, setMessages] = useState([]);
 
-  const {id, friendAvatar} = route.params;
+  const {id, friendAvatar, userId} = route.params;
 
   const ref = firestore().collection('Chats').doc(id).collection('Messages');
 
@@ -51,6 +51,7 @@ const ChatScreen = () => {
       }
     });
   }, []);
+
   // Send message
   const onSend = useCallback((messages = []) => {
     setMessages(previousMessages =>
@@ -75,6 +76,56 @@ const ChatScreen = () => {
           text,
           user: user._id,
         },
+      });
+
+    // update current user message data
+    firestore()
+      .collection('Users')
+      .doc(authData.userData.id)
+      .collection('Chats')
+      .where('user', '==', userId)
+      .limit(1)
+      .get()
+      .then(querySnapshot => {
+        firestore()
+          .collection('Users')
+          .doc(authData.userData.id)
+          .collection('Chats')
+          .doc(querySnapshot._docs[0]._ref.id) // chat doc id
+          .update({
+            lastMessage: {
+              _id,
+              createdAt,
+              text,
+              user: user._id,
+            },
+            lastUpdate: createdAt,
+          });
+      });
+
+    // update selected user message data
+    firestore()
+      .collection('Users')
+      .doc(userId)
+      .collection('Chats')
+      .where('user', '==', authData.userData.id)
+      .limit(1)
+      .get()
+      .then(querySnapshot => {
+        firestore()
+          .collection('Users')
+          .doc(userId)
+          .collection('Chats')
+          .doc(querySnapshot._docs[0]._ref.id) // chat doc id
+          .update({
+            lastMessage: {
+              _id,
+              createdAt,
+              text,
+              user: user._id,
+            },
+            lastUpdate: createdAt,
+          });
       });
   }, []);
 

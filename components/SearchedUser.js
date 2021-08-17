@@ -35,6 +35,7 @@ const SearchedUser = ({item, hasChat}) => {
           .add({
             id: chat.id,
             user: item.id,
+            lastUpdate: new Date(),
           });
 
         // add chat to selected user
@@ -42,10 +43,15 @@ const SearchedUser = ({item, hasChat}) => {
         firestore().collection('Users').doc(item.id).collection('Chats').add({
           id: chat.id,
           user: authData.userData.id,
+          lastUpdate: new Date(),
         });
 
         // Navigate to chat
-        navigation.navigate('Chat', {id: chat.id, username: item.username});
+        navigation.navigate('Chat', {
+          id: chat.id,
+          username: item.username,
+          userId: item.id,
+        });
       });
   };
 
