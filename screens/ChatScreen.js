@@ -65,19 +65,6 @@ const ChatScreen = () => {
       user,
     });
 
-    // update last message field in chat doc
-    firestore()
-      .collection('Chats')
-      .doc(id)
-      .update({
-        lastMessage: {
-          _id,
-          createdAt,
-          text,
-          user: user._id,
-        },
-      });
-
     // update current user message data
     firestore()
       .collection('Users')

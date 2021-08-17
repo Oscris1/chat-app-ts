@@ -13,12 +13,9 @@ import firestore from '@react-native-firebase/firestore';
 
 const windowWidth = Dimensions.get('window').width;
 
-const ChatListElement = ({id, item}) => {
+const ChatListElement = ({id, item, message}) => {
   // state of selected user
   const [user, setUser] = useState({});
-
-  // state of last message
-  const [message, setMessage] = useState();
 
   const defaultAvatar =
     'https://firebasestorage.googleapis.com/v0/b/chat-app-c20dd.appspot.com/o/defAvatar.jpg?alt=media&token=44212c24-deb3-41f2-9251-7931f53d18fa';
@@ -31,16 +28,6 @@ const ChatListElement = ({id, item}) => {
       .get()
       .then(userData => {
         setUser(userData.data());
-      });
-  }, []);
-
-  //fetch last message info
-  useEffect(() => {
-    return firestore()
-      .collection('Chats')
-      .doc(id)
-      .onSnapshot(documentSnapshot => {
-        setMessage(documentSnapshot.data().lastMessage);
       });
   }, []);
 
