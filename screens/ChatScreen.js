@@ -87,6 +87,7 @@ const ChatScreen = () => {
               user: user._id,
             },
             lastUpdate: createdAt,
+            displayed: true,
           });
       });
 
@@ -112,6 +113,7 @@ const ChatScreen = () => {
               user: user._id,
             },
             lastUpdate: createdAt,
+            displayed: false,
           });
       });
   }, []);

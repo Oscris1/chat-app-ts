@@ -36,6 +36,7 @@ const SearchedUser = ({item, hasChat}) => {
             id: chat.id,
             user: item.id,
             lastUpdate: new Date(),
+            displayed: true,
           });
 
         // add chat to selected user
@@ -44,6 +45,7 @@ const SearchedUser = ({item, hasChat}) => {
           id: chat.id,
           user: authData.userData.id,
           lastUpdate: new Date(),
+          displayed: true,
         });
 
         // Navigate to chat

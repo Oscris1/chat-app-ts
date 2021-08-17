@@ -22,12 +22,16 @@ const PeopleScreen = () => {
       const list = [];
       querySnapshot.forEach(documentSnapshot => {
         // data inside the Chat doc
-        const {id, user, lastMessage, lastUpdate} = documentSnapshot.data();
+        const {id, user, lastMessage, lastUpdate, displayed} =
+          documentSnapshot.data();
+        const chatRef = documentSnapshot._ref.id;
         list.push({
           id,
           user,
           lastMessage,
           lastUpdate,
+          chatRef,
+          displayed,
         });
       });
       setChats(list);
@@ -50,6 +54,7 @@ const PeopleScreen = () => {
             id={item.id}
             item={item}
             message={item.lastMessage}
+            displayed={item.displayed}
           />
         )}
         keyExtractor={item => item.id.toString()}
