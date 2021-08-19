@@ -10,7 +10,7 @@ import {
 import auth from '@react-native-firebase/auth';
 import {useSelector, useDispatch} from 'react-redux';
 
-import {getUser} from '../store/auth-slice';
+import {loginHandler} from '../utils/loginHandler';
 import ErrorMessageBox from '../components/ErrorMessageBox';
 
 const LogInScreen = ({navigation}) => {
@@ -29,25 +29,15 @@ const LogInScreen = ({navigation}) => {
   };
 
   // Handle user state changes
-  function onAuthStateChanged(user) {
+  const onAuthStateChanged = user => {
     if (user) {
-      const freshAccount =
-        Date.now() - user._user.metadata.creationTime < 15000;
-
-      // TO DO -> find another solution
-      if (freshAccount) {
-        setLoading(true);
-        setTimeout(
-          () => dispatch(getUser(user._user.uid)).then(setLoading(false)),
-          2000,
-        ); // wait 2 seconds for doc creation
-      } else {
-        setLoading(true);
-        dispatch(getUser(user._user.uid)).then(setLoading(false));
-      }
+      setLoading(true);
+      loginHandler(user, dispatch);
+    } else {
+      setLoading(false);
     }
     if (initializing) setInitializing(false);
-  }
+  };
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
@@ -56,6 +46,7 @@ const LogInScreen = ({navigation}) => {
 
   useEffect(() => {
     if (authData.status === 'success') {
+      setLoading(false);
       navigation.navigate('Main');
     }
   }, [authData.status]);
