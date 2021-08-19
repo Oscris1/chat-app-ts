@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import {useSelector, useDispatch} from 'react-redux';
@@ -20,6 +21,7 @@ const LogInScreen = ({navigation}) => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [errorMessage, setErrorMessage] = useState();
+  const [loading, setLoading] = useState(false);
 
   const createNewAccountButtonHandler = () => {
     navigation.navigate('Register');
@@ -34,8 +36,15 @@ const LogInScreen = ({navigation}) => {
 
       // TO DO -> find another solution
       if (freshAccount) {
-        setTimeout(() => dispatch(getUser(user._user.uid)), 2000); // wait 2 seconds for doc creation
-      } else dispatch(getUser(user._user.uid));
+        setLoading(true);
+        setTimeout(
+          () => dispatch(getUser(user._user.uid)).then(setLoading(false)),
+          2000,
+        ); // wait 2 seconds for doc creation
+      } else {
+        setLoading(true);
+        dispatch(getUser(user._user.uid)).then(setLoading(false));
+      }
     }
     if (initializing) setInitializing(false);
   }
@@ -84,41 +93,48 @@ const LogInScreen = ({navigation}) => {
   };
 
   if (initializing) return null;
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="#00ff00" />
+        <Text>Loging in...</Text>
+      </View>
+    );
+  } else {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.headerText}>Log In</Text>
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.headerText}>Log In</Text>
+        {errorMessage && <ErrorMessageBox errorMessage={errorMessage} />}
+        <TextInput
+          style={styles.input}
+          onChangeText={setEmail}
+          value={email}
+          placeholder="Email"
+        />
+        <TextInput
+          style={styles.input}
+          onChangeText={setPassword}
+          value={password}
+          placeholder="Password"
+          secureTextEntry={true}
+        />
 
-      {errorMessage && <ErrorMessageBox errorMessage={errorMessage} />}
-      <TextInput
-        style={styles.input}
-        onChangeText={setEmail}
-        value={email}
-        placeholder="Email"
-      />
-      <TextInput
-        style={styles.input}
-        onChangeText={setPassword}
-        value={password}
-        placeholder="Password"
-        secureTextEntry={true}
-      />
+        {/* Login Button */}
+        <TouchableOpacity style={styles.blackButton} onPress={login}>
+          <Text style={styles.blackButtonText}>Log In</Text>
+        </TouchableOpacity>
 
-      {/* Login Button */}
-      <TouchableOpacity style={styles.blackButton} onPress={login}>
-        <Text style={styles.blackButtonText}>Log In</Text>
-      </TouchableOpacity>
-
-      {/* Navigate to registration screen button */}
-      <TouchableOpacity
-        style={styles.emptyButton}
-        onPress={createNewAccountButtonHandler}>
-        <Text style={styles.emptyButtonText}>Create New Account</Text>
-      </TouchableOpacity>
-    </View>
-  );
+        {/* Navigate to registration screen button */}
+        <TouchableOpacity
+          style={styles.emptyButton}
+          onPress={createNewAccountButtonHandler}>
+          <Text style={styles.emptyButtonText}>Create New Account</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
