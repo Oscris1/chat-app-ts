@@ -25,6 +25,7 @@ const RegistrationScreen = ({navigation}) => {
       .createUserWithEmailAndPassword(email, password)
       .then(user => {
         console.log('User account created & signed in!');
+        navigation.navigate('LogIn');
 
         // Create user document
         firestore()
