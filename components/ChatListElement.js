@@ -8,10 +8,10 @@ import {
   View,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-
 import {useSelector} from 'react-redux';
-
 import firestore from '@react-native-firebase/firestore';
+
+import {cropText} from '../utils/utils';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -71,10 +71,7 @@ const ChatListElement = ({id, item, message, displayed}) => {
         <Text style={styles.username}>{user.username}</Text>
         {/** crop a message if length >= 30 */}
         <Text style={displayed ? styles.text : styles.textNotDisplayed}>
-          {message &&
-            `${message.text.substring(0, 30)} ${
-              message.text.length >= 30 ? '...' : ''
-            }`}
+          {message && cropText(message.text, 30)}
         </Text>
       </View>
 
