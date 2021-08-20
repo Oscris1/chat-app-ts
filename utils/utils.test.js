@@ -1,4 +1,5 @@
 import {cropText} from './utils';
+import {inputValidation} from './utils';
 
 describe('cropText tests', () => {
   it('crop too long text', () => {
@@ -13,5 +14,35 @@ describe('cropText tests', () => {
     expect(croppedText).toBe('Short text');
     expect(croppedText).not.toBe('Short text...');
     expect(croppedText.length).toEqual(10);
+  });
+});
+
+describe('input validation', () => {
+  it('data is correct', () => {
+    expect(
+      inputValidation(
+        'testemail@gmail.com',
+        'Test User',
+        'Test123!',
+        'Test123!',
+      ),
+    ).toBeUndefined();
+  });
+
+  it('one empty field', () => {
+    expect(inputValidation('testemail@gmail.com', 'Test123!', 'Test123!')).toBe(
+      'Required fields are not filled',
+    );
+  });
+
+  it('two different password', () => {
+    expect(
+      inputValidation(
+        'testemail@gmail.com',
+        'Test User',
+        'Test123!',
+        'WrongPassword',
+      ),
+    ).toBe('Passwords do not match');
   });
 });
