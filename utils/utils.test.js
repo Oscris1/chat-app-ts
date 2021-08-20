@@ -67,6 +67,48 @@ describe('input validation', () => {
     ).toBe('The e-mail is invalid');
   });
 
+  // password validation
+  describe('password validation', () => {
+    it('password too short', () => {
+      expect(
+        inputValidation(
+          'testemail@gmail.com',
+          'Test User',
+          'Test123',
+          'Test123',
+        ),
+      ).toBe(
+        `Weak password:\nMinimum eight characters, at least one letter and one number are required`,
+      );
+    });
+
+    it('password without numbers', () => {
+      expect(
+        inputValidation(
+          'testemail@gmail.com',
+          'Test User',
+          'Test123',
+          'Testaaaaaa',
+        ),
+      ).toBe(
+        `Weak password:\nMinimum eight characters, at least one letter and one number are required`,
+      );
+    });
+
+    it('password without letters', () => {
+      expect(
+        inputValidation(
+          'testemail@gmail.com',
+          'Test User',
+          'Test123',
+          '12313131231',
+        ),
+      ).toBe(
+        `Weak password:\nMinimum eight characters, at least one letter and one number are required`,
+      );
+    });
+  });
+
   // two different password
   it('two different password', () => {
     expect(
