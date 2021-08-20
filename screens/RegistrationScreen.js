@@ -15,12 +15,23 @@ import ErrorMessageBox from '../components/ErrorMessageBox';
 const RegistrationScreen = ({navigation}) => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const [password2, setPassword2] = useState();
   const [fullName, setFullName] = useState();
   const [errorMessage, setErrorMessage] = useState();
 
   const register = () => {
     setErrorMessage();
-    if (!email || !password) return;
+    if (!email || !password || !fullName || !password2) {
+      setErrorMessage('Required fields are not filled');
+      return;
+    }
+    // validation that both password are equal
+    if (password !== password2) {
+      setErrorMessage('Passwords do not match');
+      setPassword();
+      setPassword2();
+      return;
+    }
     auth()
       .createUserWithEmailAndPassword(email, password)
       .then(user => {
@@ -82,6 +93,13 @@ const RegistrationScreen = ({navigation}) => {
         onChangeText={setPassword}
         value={password}
         placeholder="Password"
+        secureTextEntry={true}
+      />
+      <TextInput
+        style={styles.input}
+        onChangeText={setPassword2}
+        value={password2}
+        placeholder="Confirm password"
         secureTextEntry={true}
       />
 
