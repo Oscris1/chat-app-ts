@@ -17,6 +17,7 @@ describe('cropText tests', () => {
   });
 });
 
+// sign up input validation
 describe('input validation', () => {
   it('data is correct', () => {
     expect(
@@ -35,6 +36,38 @@ describe('input validation', () => {
     );
   });
 
+  // email validation
+  describe('email validation', () => {
+    it('invalid e-mail returns an error message', () => {
+      expect(
+        inputValidation('testemail', 'Test User', 'Test123!', 'Test123!'),
+      ).toBe('The e-mail is invalid');
+
+      expect(
+        inputValidation(
+          'testemail@@gmail.com',
+          'Test User',
+          'Test123!',
+          'Test123!',
+        ),
+      ).toBe('The e-mail is invalid');
+
+      expect(
+        inputValidation('testemail@gmail', 'Test User', 'Test123!', 'Test123!'),
+      ).toBe('The e-mail is invalid');
+    });
+
+    expect(
+      inputValidation(
+        'testemail@gm_ail.com',
+        'Test User',
+        'Test123!',
+        'Test123!',
+      ),
+    ).toBe('The e-mail is invalid');
+  });
+
+  // two different password
   it('two different password', () => {
     expect(
       inputValidation(
