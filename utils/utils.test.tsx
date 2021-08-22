@@ -31,7 +31,7 @@ describe('input validation', () => {
   });
 
   it('one empty field', () => {
-    expect(inputValidation('testemail@gmail.com', 'Test123!', 'Test123!')).toBe(
+    expect(inputValidation('testemail@gmail.com', undefined ,'Test123!', 'Test123!')).toBe(
       'Required fields are not filled',
     );
   });

@@ -61,7 +61,7 @@ const SearchScreen = () => {
         const list = [];
         users.forEach(doc => {
           const {email, username, avatar} = doc.data();
-          const id = doc._ref.id;
+          const id = doc.id; // doc._ref.id document id
           list.push({
             id,
             email,
@@ -133,6 +133,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
   },
+  usersList: {},
 });
 
 export default SearchScreen;

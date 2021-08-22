@@ -1,7 +1,15 @@
-import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
+import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit';
 import firestore from '@react-native-firebase/firestore';
 
-export const getUser = createAsyncThunk('auth/getUser', async userId => {
+interface UserAttributes {
+  id: string
+  email: string
+  username: string
+  avatar?: string
+}
+
+
+export const getUser = createAsyncThunk('auth/getUser', async (userId: string) => {
   const data = await firestore()
     .collection('Users')
     .doc(userId)
@@ -38,21 +46,21 @@ const authSlice = createSlice({
       state.userData.avatar = payload.avatar;
     },
   },
-  extraReducers: {
-    [getUser.pending]: state => {
+  extraReducers: (builder) => {
+    builder.addCase(getUser.pending, state => {
       state.status = 'loading';
-    },
-    [getUser.fulfilled]: (state, {payload}) => {
+    }),
+    builder.addCase(getUser.fulfilled, (state, {payload} ) => {
       state.logged = true;
       state.userData.id = payload.id;
       state.userData.email = payload.email;
       state.userData.username = payload.username;
       state.userData.avatar = payload.avatar;
       state.status = 'success';
-    },
-    [getUser.rejected]: state => {
+    }),
+    builder.addCase(getUser.rejected, state => {
       state.status = 'failed';
-    },
+    })
   },
 });
 

@@ -4,13 +4,25 @@ import {createStackNavigator} from '@react-navigation/stack';
 import PeopleScreen from '../screens/PeopleScreen';
 import ChatScreen from '../screens/ChatScreen';
 
-const ChatStack = createStackNavigator();
+type ChatStackParamList = {
+  PeopleList: undefined,
+  Chat: {
+  id: string,
+  friendAvatar: string,
+  userId: string,
+  username: string,
+  },
+}
+
+
+
+const ChatStack = createStackNavigator<ChatStackParamList>();
 
 const ChatNavigator = () => {
   return (
     <ChatStack.Navigator mode="modal">
       <ChatStack.Screen
-        name="People List"
+        name="PeopleList"
         component={PeopleScreen}
         options={{headerShown: false}}
       />

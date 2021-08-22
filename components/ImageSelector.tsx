@@ -6,11 +6,12 @@ import ImagePicker from 'react-native-image-crop-picker';
 
 import {useSelector, useDispatch} from 'react-redux';
 import {updatePhotoState} from '../store/auth-slice';
+import {RootState} from '../store/index'
 
 const ImageSelector = () => {
-  const [image, setImage] = useState();
+  const [image, setImage] = useState<undefined| string>();
   const dispatch = useDispatch();
-  const authData = useSelector(state => state.auth);
+  const authData = useSelector((state: RootState) => state.auth);
   const reference = storage().ref(`/avatars/${authData.userData.id}.jpg`);
 
   // Select photo from gallery
@@ -36,7 +37,7 @@ const ImageSelector = () => {
   const uploadImage = async () => {
     //Send image to firebase storage
     const task = await reference.putFile(image);
-    setImage();
+    setImage(undefined);
 
     // retreive image url
     const url = await reference.getDownloadURL();
@@ -86,7 +87,7 @@ const ImageSelector = () => {
             {/** Cancel button */}
             <TouchableOpacity
               style={styles.cancelButton}
-              onPress={() => setImage()}>
+              onPress={() => setImage(undefined)}>
               <Text style={styles.cancelButtonText}>Cancel</Text>
             </TouchableOpacity>
           </View>
@@ -104,7 +105,6 @@ const styles = StyleSheet.create({
   changePhotoBox: {
     width: '70%',
     height: 200,
-    borderRadius: 50 / 2,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#082032',

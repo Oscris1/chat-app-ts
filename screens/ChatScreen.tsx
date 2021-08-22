@@ -6,10 +6,26 @@ import firestore from '@react-native-firebase/firestore';
 import {useSelector} from 'react-redux';
 
 import {useRoute} from '@react-navigation/native';
+import { RouteProp } from '@react-navigation/native';
+import {RootState} from '../store/index'
+
+type ChatStackParamList = {
+  PeopleList: undefined,
+  Chat: {
+  id: string,
+  friendAvatar: string,
+  userId: string,
+  username?: string,
+  },
+}
+
+type ChatScreenRouteProp = RouteProp<ChatStackParamList, 'Chat'>;
 
 const ChatScreen = () => {
-  const route = useRoute();
-  const authData = useSelector(state => state.auth);
+
+
+  const route = useRoute<ChatScreenRouteProp>();
+  const authData = useSelector((state: RootState) => state.auth);
   const [loading, setLoading] = useState(true);
   const [messages, setMessages] = useState([]);
 
@@ -74,11 +90,12 @@ const ChatScreen = () => {
       .limit(1)
       .get()
       .then(querySnapshot => {
+
         firestore()
           .collection('Users')
           .doc(authData.userData.id)
           .collection('Chats')
-          .doc(querySnapshot._docs[0]._ref.id) // chat doc id
+          .doc(querySnapshot.docs[0].id) // chat doc id
           .update({
             lastMessage: {
               _id,
@@ -104,7 +121,7 @@ const ChatScreen = () => {
           .collection('Users')
           .doc(userId)
           .collection('Chats')
-          .doc(querySnapshot._docs[0]._ref.id) // chat doc id
+          .doc(querySnapshot.docs[0].id) // chat doc id
           .update({
             lastMessage: {
               _id,
@@ -129,11 +146,13 @@ const ChatScreen = () => {
               left: {
                 color: 'black',
               },
+              right: {},
             }}
             wrapperStyle={{
               left: {
                 backgroundColor: 'lightgrey',
               },
+              right: {},
             }}
           />
         );

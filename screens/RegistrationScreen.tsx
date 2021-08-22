@@ -14,21 +14,21 @@ import ErrorMessageBox from '../components/ErrorMessageBox';
 import {inputValidation} from '../utils/utils';
 
 const RegistrationScreen = ({navigation}) => {
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-  const [password2, setPassword2] = useState();
-  const [fullName, setFullName] = useState();
-  const [errorMessage, setErrorMessage] = useState();
+  const [email, setEmail] = useState<undefined | string>();
+  const [password, setPassword] = useState<undefined | string>();
+  const [password2, setPassword2] = useState<undefined | string>();
+  const [fullName, setFullName] = useState<undefined | string>();
+  const [errorMessage, setErrorMessage] = useState<undefined | string>();
 
   const register = () => {
-    setErrorMessage();
+    setErrorMessage(undefined);
 
     // form input validation
     const errorText = inputValidation(email, fullName, password, password2);
     if (errorText) {
       setErrorMessage(errorText);
-      setPassword();
-      setPassword2();
+      setPassword(undefined);
+      setPassword2(undefined);
       return;
     }
 
@@ -39,12 +39,13 @@ const RegistrationScreen = ({navigation}) => {
         console.log('User account created & signed in!');
         navigation.navigate('LogIn');
 
+
         // Create user document
         firestore()
           .collection('Users')
-          .doc(user.user._user.uid)
+          .doc(user.user.uid)
           .set({
-            id: user.user._user.uid,
+            id: user.user.uid,
             email: email,
             username: fullName,
           })

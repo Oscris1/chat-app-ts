@@ -4,11 +4,12 @@ import {useSelector} from 'react-redux';
 import firestore from '@react-native-firebase/firestore';
 
 import ChatListElement from '../components/ChatListElement';
+import {RootState} from '../store/index'
 
 const PeopleScreen = () => {
-  const authData = useSelector(state => state.auth);
+  const authData = useSelector((state: RootState) => state.auth);
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const [chats, setChats] = useState([]);
   const ref = firestore()
     .collection('Users')
@@ -24,7 +25,7 @@ const PeopleScreen = () => {
         // data inside the Chat doc
         const {id, user, lastMessage, lastUpdate, displayed} =
           documentSnapshot.data();
-        const chatRef = documentSnapshot._ref.id;
+        const chatRef = documentSnapshot.id;
         list.push({
           id,
           user,

@@ -17,15 +17,15 @@ const LogInScreen = ({navigation}) => {
   const dispatch = useDispatch();
   const authData = useSelector(state => state.auth);
 
-  const [initializing, setInitializing] = useState(true);
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-  const [errorMessage, setErrorMessage] = useState();
-  const [loading, setLoading] = useState(false);
+  const [initializing, setInitializing] = useState<boolean>(true);
+  const [email, setEmail] = useState<string>();
+  const [password, setPassword] = useState<string>();
+  const [errorMessage, setErrorMessage] = useState<undefined | string>();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const createNewAccountButtonHandler = () => {
     navigation.navigate('Register');
-    setErrorMessage();
+    setErrorMessage(undefined);
   };
 
   // Handle user state changes
@@ -52,7 +52,7 @@ const LogInScreen = ({navigation}) => {
   }, [authData.status]);
 
   const login = () => {
-    setErrorMessage();
+    setErrorMessage(undefined);
     if (!email || !password) return;
     auth()
       .signInWithEmailAndPassword(email, password)

@@ -10,16 +10,24 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import firestore from '@react-native-firebase/firestore';
+import {RootState} from '../store/index'
 
 import {cropText} from '../utils/utils';
 
 const windowWidth = Dimensions.get('window').width;
 
+interface UserInterface {
+  id?: string
+  email?: string
+  username?: string
+  avatar?: string
+}
+
 const ChatListElement = ({id, item, message, displayed}) => {
-  const authData = useSelector(state => state.auth);
+  const authData = useSelector((state: RootState) => state.auth);
   const navigation = useNavigation();
   // state of selected user
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState<UserInterface>({});
 
   const defaultAvatar =
     'https://firebasestorage.googleapis.com/v0/b/chat-app-c20dd.appspot.com/o/defAvatar.jpg?alt=media&token=44212c24-deb3-41f2-9251-7931f53d18fa';
@@ -51,7 +59,14 @@ const ChatListElement = ({id, item, message, displayed}) => {
       .doc(item.user)
       .get()
       .then(userData => {
-        setUser(userData.data());
+        const {id, email, username, avatar} = userData.data()
+        const av = avatar || defaultAvatar
+        setUser({
+          id,
+          email,
+          username,
+          avatar: av,
+        });
       });
   }, []);
 
@@ -63,7 +78,7 @@ const ChatListElement = ({id, item, message, displayed}) => {
       <Image
         style={styles.tinyLogo}
         source={{
-          uri: user.avatar || defaultAvatar,
+          uri: user.avatar,
         }}
       />
 
