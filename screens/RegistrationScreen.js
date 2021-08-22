@@ -11,6 +11,7 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
 import ErrorMessageBox from '../components/ErrorMessageBox';
+import {inputValidation} from '../utils/utils';
 
 const RegistrationScreen = ({navigation}) => {
   const [email, setEmail] = useState();
@@ -21,17 +22,17 @@ const RegistrationScreen = ({navigation}) => {
 
   const register = () => {
     setErrorMessage();
-    if (!email || !password || !fullName || !password2) {
-      setErrorMessage('Required fields are not filled');
-      return;
-    }
-    // validation that both password are equal
-    if (password !== password2) {
-      setErrorMessage('Passwords do not match');
+
+    // form input validation
+    const errorText = inputValidation(email, fullName, password, password2);
+    if (errorText) {
+      setErrorMessage(errorText);
       setPassword();
       setPassword2();
       return;
     }
+
+    // Create user in firestore
     auth()
       .createUserWithEmailAndPassword(email, password)
       .then(user => {
