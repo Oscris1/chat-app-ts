@@ -85,7 +85,7 @@ const LogInScreen = ({navigation}: Props) => {
           setEmail('');
           setPassword('');
         }
-        console.error(error);
+        //console.error(error);
       });
   };
 
@@ -94,7 +94,7 @@ const LogInScreen = ({navigation}: Props) => {
     return (
       <View style={styles.container}>
         <ActivityIndicator size="large" color="#00ff00" />
-        <Text>Loging in...</Text>
+        <Text>Logging in...</Text>
       </View>
     );
   } else {
