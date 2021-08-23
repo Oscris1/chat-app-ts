@@ -1,11 +1,35 @@
 import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  StackNavigationProp,
+} from '@react-navigation/stack';
 
 import LogInScreen from '../screens/LogInScreen';
 import RegistrationScreen from '../screens/RegistrationScreen';
 import TabNavigator from './TabNavigator';
 
-const RootStack = createStackNavigator();
+type RootStackParamList = {
+  LogIn: undefined;
+  Register: undefined;
+  Main: undefined;
+};
+
+export type LogInScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'LogIn'
+>;
+
+export type RegisterScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'Register'
+>;
+
+export type MainScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'Main'
+>;
+
+const RootStack = createStackNavigator<RootStackParamList>();
 
 const RootNavigator = () => {
   return (

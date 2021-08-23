@@ -12,10 +12,22 @@ import {useNavigation} from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import {useSelector} from 'react-redux';
 
+import {RootState} from '../store/index';
+
 const windowWidth = Dimensions.get('window').width;
 
-const SearchedUser = ({item, hasChat}) => {
-  const authData = useSelector(state => state.auth);
+interface Props {
+  hasChat: boolean;
+  item: {
+    id: string;
+    email: string;
+    username: string;
+    avatar: string;
+  };
+}
+
+const SearchedUser: React.FC<Props> = ({item, hasChat}) => {
+  const authData = useSelector((state: RootState) => state.auth);
   const navigation = useNavigation();
 
   // create chat handler

@@ -1,36 +1,44 @@
 import React, {useState, useCallback, useEffect} from 'react';
 import {GiftedChat, Bubble} from 'react-native-gifted-chat';
+import {View, ActivityIndicator} from 'react-native';
 
 import firestore from '@react-native-firebase/firestore';
 
 import {useSelector} from 'react-redux';
 
 import {useRoute} from '@react-navigation/native';
-import { RouteProp } from '@react-navigation/native';
-import {RootState} from '../store/index'
+import {RouteProp} from '@react-navigation/native';
+import {RootState} from '../store/index';
 
 type ChatStackParamList = {
-  PeopleList: undefined,
+  PeopleList: undefined;
   Chat: {
-  id: string,
-  friendAvatar: string,
-  userId: string,
-  username?: string,
-  },
-}
-
+    id: string;
+    friendAvatar: string;
+    userId: string;
+    username?: string;
+  };
+};
 type ChatScreenRouteProp = RouteProp<ChatStackParamList, 'Chat'>;
 
+interface MessageInterface {
+  _id: string;
+  createdAt: number | Date;
+  text: string;
+  user: {
+    _id: string;
+    name: string;
+    avatar?: string;
+  };
+}
+
 const ChatScreen = () => {
-
-
   const route = useRoute<ChatScreenRouteProp>();
   const authData = useSelector((state: RootState) => state.auth);
   const [loading, setLoading] = useState(true);
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<MessageInterface[]>([]);
 
   const {id, friendAvatar, userId} = route.params;
-
   const ref = firestore().collection('Chats').doc(id).collection('Messages');
 
   const avatar =
@@ -40,7 +48,7 @@ const ChatScreen = () => {
   // fetch messages
   useEffect(() => {
     return ref.orderBy('createdAt', 'desc').onSnapshot(querySnapshot => {
-      const list = [];
+      const list: MessageInterface[] = [];
       querySnapshot.forEach(doc => {
         const {_id, createdAt, text, user} = doc.data();
 
@@ -90,7 +98,6 @@ const ChatScreen = () => {
       .limit(1)
       .get()
       .then(querySnapshot => {
-
         firestore()
           .collection('Users')
           .doc(authData.userData.id)
@@ -134,38 +141,45 @@ const ChatScreen = () => {
           });
       });
   }, []);
-
-  return (
-    <GiftedChat
-      showUserAvatar={true}
-      renderBubble={props => {
-        return (
-          <Bubble
-            {...props}
-            textStyle={{
-              left: {
-                color: 'black',
-              },
-              right: {},
-            }}
-            wrapperStyle={{
-              left: {
-                backgroundColor: 'lightgrey',
-              },
-              right: {},
-            }}
-          />
-        );
-      }}
-      messages={messages}
-      onSend={messages => onSend(messages)}
-      user={{
-        _id: authData.userData.id,
-        name: authData.userData.email,
-        avatar: avatar, // without this there is a small bug with refreshing avatar -> try do something later
-      }}
-    />
-  );
+  if (authData.userData.id) {
+    return (
+      <GiftedChat
+        showUserAvatar={true}
+        renderBubble={props => {
+          return (
+            <Bubble
+              {...props}
+              textStyle={{
+                left: {
+                  color: 'black',
+                },
+                right: {},
+              }}
+              wrapperStyle={{
+                left: {
+                  backgroundColor: 'lightgrey',
+                },
+                right: {},
+              }}
+            />
+          );
+        }}
+        messages={messages}
+        onSend={messages => onSend(messages)}
+        user={{
+          _id: authData.userData.id,
+          name: authData.userData.email,
+          avatar: avatar, // without this there is a small bug with refreshing avatar -> try do something later
+        }}
+      />
+    );
+  } else {
+    return (
+      <View>
+        <ActivityIndicator size="large" color="#00ff00" />
+      </View>
+    );
+  }
 };
 
 export default ChatScreen;

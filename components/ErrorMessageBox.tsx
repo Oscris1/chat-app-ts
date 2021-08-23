@@ -1,7 +1,11 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 
-const ErrorMessageBox = ({errorMessage}) => {
+interface Props {
+  errorMessage: string;
+}
+
+const ErrorMessageBox: React.FC<Props> = ({errorMessage}) => {
   return (
     <View style={styles.errorMessage}>
       <Text style={styles.errorMessageText}>{errorMessage}</Text>

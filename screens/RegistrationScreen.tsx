@@ -9,11 +9,15 @@ import {
 
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-
+import {RegisterScreenNavigationProp} from '../navigation/RootNavigator';
 import ErrorMessageBox from '../components/ErrorMessageBox';
 import {inputValidation} from '../utils/utils';
 
-const RegistrationScreen = ({navigation}) => {
+type Props = {
+  navigation: RegisterScreenNavigationProp;
+};
+
+const RegistrationScreen = ({navigation}: Props) => {
   const [email, setEmail] = useState<undefined | string>();
   const [password, setPassword] = useState<undefined | string>();
   const [password2, setPassword2] = useState<undefined | string>();
@@ -32,47 +36,48 @@ const RegistrationScreen = ({navigation}) => {
       return;
     }
 
-    // Create user in firestore
-    auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then(user => {
-        console.log('User account created & signed in!');
-        navigation.navigate('LogIn');
+    if (email && password) {
+      // Create user in firestore
+      auth()
+        .createUserWithEmailAndPassword(email, password)
+        .then(user => {
+          console.log('User account created & signed in!');
+          navigation.navigate('LogIn');
 
+          // Create user document
+          firestore()
+            .collection('Users')
+            .doc(user.user.uid)
+            .set({
+              id: user.user.uid,
+              email: email,
+              username: fullName,
+            })
+            .then(() => {
+              console.log('User added!');
+            });
 
-        // Create user document
-        firestore()
-          .collection('Users')
-          .doc(user.user.uid)
-          .set({
-            id: user.user.uid,
-            email: email,
-            username: fullName,
-          })
-          .then(() => {
-            console.log('User added!');
-          });
+          setEmail('');
+          setPassword('');
+          setFullName('');
+        })
+        .catch(error => {
+          if (error.code === 'auth/email-already-in-use') {
+            console.log('That email address is already in use!');
+            setErrorMessage('That email address is already in use!');
+          }
 
-        setEmail('');
-        setPassword('');
-        setFullName('');
-      })
-      .catch(error => {
-        if (error.code === 'auth/email-already-in-use') {
-          console.log('That email address is already in use!');
-          setErrorMessage('That email address is already in use!');
-        }
+          if (error.code === 'auth/invalid-email') {
+            console.log('That email address is invalid!');
+            setErrorMessage('That email address is invalid!');
+          }
 
-        if (error.code === 'auth/invalid-email') {
-          console.log('That email address is invalid!');
-          setErrorMessage('That email address is invalid!');
-        }
-
-        setEmail('');
-        setPassword('');
-        setFullName('');
-        console.error(error);
-      });
+          setEmail('');
+          setPassword('');
+          setFullName('');
+          console.error(error);
+        });
+    }
   };
   return (
     <View style={styles.container}>

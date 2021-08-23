@@ -4,13 +4,27 @@ import {useSelector} from 'react-redux';
 import firestore from '@react-native-firebase/firestore';
 
 import ChatListElement from '../components/ChatListElement';
-import {RootState} from '../store/index'
+import {RootState} from '../store/index';
+
+interface UserChatInterface {
+  id: string; // chat id
+  user: string; // chat user id
+  lastMessage: {
+    id: string;
+    createdAt: any; //timestamp
+    text: string;
+    user: string; // message creator's id
+  };
+  lastUpdate: string;
+  displayed: boolean;
+  chatRef: string;
+}
 
 const PeopleScreen = () => {
   const authData = useSelector((state: RootState) => state.auth);
 
   const [loading, setLoading] = useState<boolean>(true);
-  const [chats, setChats] = useState([]);
+  const [chats, setChats] = useState<UserChatInterface[]>([]);
   const ref = firestore()
     .collection('Users')
     .doc(authData.userData.id)
@@ -20,9 +34,9 @@ const PeopleScreen = () => {
   useEffect(() => {
     return ref.orderBy('lastUpdate', 'desc').onSnapshot(querySnapshot => {
       // List of user's chats
-      const list = [];
+      const list: UserChatInterface[] = [];
       querySnapshot.forEach(documentSnapshot => {
-        // data inside the Chat doc
+        // data inside the User -> Chat doc
         const {id, user, lastMessage, lastUpdate, displayed} =
           documentSnapshot.data();
         const chatRef = documentSnapshot.id;
@@ -53,7 +67,8 @@ const PeopleScreen = () => {
         renderItem={({item}) => (
           <ChatListElement
             id={item.id}
-            item={item}
+            userId={item.user}
+            chatRef={item.chatRef}
             message={item.lastMessage}
             displayed={item.displayed}
           />

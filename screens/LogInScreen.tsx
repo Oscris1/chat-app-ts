@@ -7,15 +7,21 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
-import auth from '@react-native-firebase/auth';
+import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import {useSelector, useDispatch} from 'react-redux';
+import {RootState} from '../store/index';
+import {LogInScreenNavigationProp} from '../navigation/RootNavigator';
 
 import {loginHandler} from '../utils/loginHandler';
 import ErrorMessageBox from '../components/ErrorMessageBox';
 
-const LogInScreen = ({navigation}) => {
+type Props = {
+  navigation: LogInScreenNavigationProp;
+};
+
+const LogInScreen = ({navigation}: Props) => {
   const dispatch = useDispatch();
-  const authData = useSelector(state => state.auth);
+  const authData = useSelector((state: RootState) => state.auth);
 
   const [initializing, setInitializing] = useState<boolean>(true);
   const [email, setEmail] = useState<string>();
@@ -29,7 +35,7 @@ const LogInScreen = ({navigation}) => {
   };
 
   // Handle user state changes
-  const onAuthStateChanged = user => {
+  const onAuthStateChanged = (user: FirebaseAuthTypes.User | null) => {
     if (user) {
       setLoading(true);
       loginHandler(user, dispatch);

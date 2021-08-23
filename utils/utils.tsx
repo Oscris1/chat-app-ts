@@ -1,9 +1,14 @@
 // if text is too long crop it and add ... on the end
-export const cropText = (text, length) => {
+export const cropText = (text: string, length: number) => {
   return `${text.substring(0, length)}${text.length >= length ? '...' : ''}`;
 };
 
-export const inputValidation = (email, fullName, password, password2) => {
+export const inputValidation = (
+  email: string | undefined,
+  fullName: string | undefined,
+  password: string | undefined,
+  password2: string | undefined,
+) => {
   // email regex
   const validateEmailExpression =
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;

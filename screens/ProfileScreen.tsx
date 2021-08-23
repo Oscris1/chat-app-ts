@@ -7,8 +7,13 @@ import {logOutState} from '../store/auth-slice';
 import {useDispatch} from 'react-redux';
 
 import ImageSelector from '../components/ImageSelector';
+import {MainScreenNavigationProp} from '../navigation/RootNavigator';
 
-const ProfileScreen = ({navigation}) => {
+type Props = {
+  navigation: MainScreenNavigationProp;
+};
+
+const ProfileScreen = ({navigation}: Props) => {
   const dispatch = useDispatch();
 
   const logOut = () => {

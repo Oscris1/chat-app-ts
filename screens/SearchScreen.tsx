@@ -8,23 +8,30 @@ import {
   TouchableOpacity,
   Keyboard,
 } from 'react-native';
-
 import {useSelector} from 'react-redux';
-
 import firestore from '@react-native-firebase/firestore';
-
 import SearchedUser from '../components/SearchedUser';
+import {RootState} from '../store/index';
 
 const defaultAvatar =
   'https://firebasestorage.googleapis.com/v0/b/chat-app-c20dd.appspot.com/o/defAvatar.jpg?alt=media&token=44212c24-deb3-41f2-9251-7931f53d18fa';
 
-const SearchScreen = () => {
-  const [emailText, setEmailText] = useState('');
-  const [searchedUsers, setSearchedUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [chatUsers, setChatUsers] = useState([]);
+interface SearchedUserInterface {
+  id: string;
+  email: string;
+  username: string;
+  avatar: string;
+}
 
-  const authData = useSelector(state => state.auth);
+const SearchScreen = () => {
+  const [emailText, setEmailText] = useState<string>('');
+  const [searchedUsers, setSearchedUsers] = useState<SearchedUserInterface[]>(
+    [],
+  );
+  const [loading, setLoading] = useState<boolean>(true);
+  const [chatUsers, setChatUsers] = useState<string[]>([]);
+
+  const authData = useSelector((state: RootState) => state.auth);
 
   const ref = firestore()
     .collection('Users')
@@ -35,7 +42,7 @@ const SearchScreen = () => {
   useEffect(() => {
     return ref.onSnapshot(querySnapshot => {
       // List of users id (for check if chat already exist)
-      const list = [];
+      const list: string[] = [];
       querySnapshot.forEach(documentSnapshot => {
         // data inside the Chat doc
         const {user} = documentSnapshot.data();
@@ -58,7 +65,7 @@ const SearchScreen = () => {
       .where('email', '<=', emailText + '~')
       .get()
       .then(users => {
-        const list = [];
+        const list: SearchedUserInterface[] = [];
         users.forEach(doc => {
           const {email, username, avatar} = doc.data();
           const id = doc.id; // doc._ref.id document id

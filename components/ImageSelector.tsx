@@ -6,10 +6,10 @@ import ImagePicker from 'react-native-image-crop-picker';
 
 import {useSelector, useDispatch} from 'react-redux';
 import {updatePhotoState} from '../store/auth-slice';
-import {RootState} from '../store/index'
+import {RootState} from '../store/index';
 
 const ImageSelector = () => {
-  const [image, setImage] = useState<undefined| string>();
+  const [image, setImage] = useState<string | undefined>();
   const dispatch = useDispatch();
   const authData = useSelector((state: RootState) => state.auth);
   const reference = storage().ref(`/avatars/${authData.userData.id}.jpg`);
@@ -36,25 +36,27 @@ const ImageSelector = () => {
   // Send image to firebase storage and update it's url in the user database object
   const uploadImage = async () => {
     //Send image to firebase storage
-    const task = await reference.putFile(image);
-    setImage(undefined);
+    if (image) {
+      const task = await reference.putFile(image);
+      setImage(undefined);
 
-    // retreive image url
-    const url = await reference.getDownloadURL();
+      // retreive image url
+      const url = await reference.getDownloadURL();
 
-    // update avatar field
-    console.log(url);
-    firestore()
-      .collection('Users')
-      .doc(authData.userData.id)
-      .update({
-        avatar: url,
-      })
-      .then(() => {
-        console.log('Avatar updated!');
-        // update redux state
-        dispatch(updatePhotoState({avatar: url}));
-      });
+      // update avatar field
+      console.log(url);
+      firestore()
+        .collection('Users')
+        .doc(authData.userData.id)
+        .update({
+          avatar: url,
+        })
+        .then(() => {
+          console.log('Avatar updated!');
+          // update redux state
+          dispatch(updatePhotoState({avatar: url}));
+        });
+    }
   };
 
   return (
