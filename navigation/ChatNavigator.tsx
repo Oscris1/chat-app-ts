@@ -5,16 +5,14 @@ import PeopleScreen from '../screens/PeopleScreen';
 import ChatScreen from '../screens/ChatScreen';
 
 type ChatStackParamList = {
-  PeopleList: undefined,
+  PeopleList: undefined;
   Chat: {
-  id: string,
-  friendAvatar: string,
-  userId: string,
-  username: string,
-  },
-}
-
-
+    id: string;
+    friendAvatar: string;
+    userId: string;
+    username: string;
+  };
+};
 
 const ChatStack = createStackNavigator<ChatStackParamList>();
 
