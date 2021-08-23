@@ -19,10 +19,10 @@ import {cropText} from '../utils/utils';
 const windowWidth = Dimensions.get('window').width;
 
 interface UserInterface {
-  id?: string;
-  email?: string;
-  username?: string;
-  avatar?: string;
+  id: string;
+  email: string;
+  username: string;
+  avatar: string;
 }
 
 interface Props {
