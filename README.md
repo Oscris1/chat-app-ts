@@ -10,6 +10,11 @@ Simple real-time messaging application
 - Firebase
 - React Native Gifted Chat
 - react-native-image-crop-picker
+## Video
+
+
+https://user-images.githubusercontent.com/48210346/130499599-eef2a984-0725-4529-8d93-16f94480a9dd.mp4
+
 
 ## Screenshots
 ![image](https://user-images.githubusercontent.com/48210346/130494928-d7c6adf0-2b9e-47e7-a653-626d29dd60a1.png)
