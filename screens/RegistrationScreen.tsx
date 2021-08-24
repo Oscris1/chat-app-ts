@@ -75,7 +75,6 @@ const RegistrationScreen = ({navigation}: Props) => {
           setEmail('');
           setPassword('');
           setFullName('');
-          console.error(error);
         });
     }
   };
