@@ -23,10 +23,8 @@ export const getUser = createAsyncThunk<
   },
   {
     condition: (userId, {getState}) => {
-      console.log('check if from register');
       const {auth} = getState();
-      if (auth.fromRegister) {
-        console.log('from register');
+      if (auth.fromUserInteraction) {
         return false;
       }
     },
@@ -68,9 +66,27 @@ export const signOut = createAsyncThunk('auth/signOut', async () => {
   return logout;
 });
 
+interface SignInCredentials {
+  email: string;
+  password: string;
+}
+
+export const signIn = createAsyncThunk(
+  'auth/signIn',
+  async (signInCredentials: SignInCredentials, {rejectWithValue}) => {
+    try {
+      const {email, password} = signInCredentials;
+      const user = await auth().signInWithEmailAndPassword(email, password);
+      return user.user.uid;
+    } catch (err) {
+      return rejectWithValue(err.code);
+    }
+  },
+);
+
 interface AuthState {
   logged: boolean;
-  fromRegister: boolean;
+  fromUserInteraction: boolean;
   status: 'idle' | 'loading' | 'success' | 'failed';
   userData: {
     id: string | undefined;
@@ -82,7 +98,7 @@ interface AuthState {
 
 const initialState = {
   status: 'idle',
-  fromRegister: false,
+  fromUserInteraction: false,
   logged: false,
   userData: {
     id: undefined,
@@ -127,13 +143,23 @@ const authSlice = createSlice({
       }),
       // createUser
       builder.addCase(createUser.fulfilled, state => {
-        state.fromRegister = false;
+        state.fromUserInteraction = false;
       }),
       builder.addCase(createUser.pending, state => {
-        state.fromRegister = true;
+        state.fromUserInteraction = true;
       }),
       builder.addCase(createUser.rejected, state => {
-        state.fromRegister = false;
+        state.fromUserInteraction = false;
+      }),
+      // signIn
+      builder.addCase(signIn.fulfilled, state => {
+        state.fromUserInteraction = false;
+      }),
+      builder.addCase(signIn.pending, state => {
+        state.fromUserInteraction = true;
+      }),
+      builder.addCase(signIn.rejected, state => {
+        state.fromUserInteraction = false;
       }),
       // signOut
       builder.addCase(signOut.fulfilled, state => {
