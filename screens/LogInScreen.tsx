@@ -12,9 +12,8 @@ import {useSelector} from 'react-redux';
 import {useAppDispatch} from '../store/index';
 import {RootState} from '../store/index';
 import {LogInScreenNavigationProp} from '../navigation/RootNavigator';
-import {createUser, getUser} from '../store/auth-slice';
+import {signIn, getUser} from '../store/auth-slice';
 
-import {loginHandler} from '../utils/loginHandler';
 import ErrorMessageBox from '../components/ErrorMessageBox';
 
 type Props = {
@@ -62,32 +61,32 @@ const LogInScreen = ({navigation}: Props) => {
   const login = () => {
     setErrorMessage(undefined);
     if (!email || !password) return;
-    auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(() => {
-        console.log('Logged In');
-        setEmail('');
-        setPassword('');
+
+    dispatch(signIn({email, password}))
+      .unwrap()
+      .then(userId => {
+        dispatch(getUser(userId)).then(() => {
+          navigation.navigate('Main');
+          setEmail('');
+          setPassword('');
+        });
       })
-      .catch(error => {
-        if (error.code === 'auth/invalid-email') {
+      .catch(err => {
+        if (err === 'auth/invalid-email') {
           console.log('Invalid email!');
           setErrorMessage('Invalid email!');
           setEmail('');
-          setPassword('');
         }
-        if (error.code === 'auth/wrong-password') {
+        if (err === 'auth/wrong-password') {
           console.log('Wrong Password!');
           setErrorMessage('Wrong Password!');
-          setPassword('');
         }
-        if (error.code === 'auth/user-not-found') {
+        if (err === 'auth/user-not-found') {
           console.log("User doesn't exist!");
           setErrorMessage("User doesn't exist!");
           setEmail('');
-          setPassword('');
         }
-        //console.error(error);
+        setPassword('');
       });
   };
 
