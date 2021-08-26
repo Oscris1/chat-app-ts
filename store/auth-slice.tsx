@@ -62,6 +62,12 @@ export const createUser = createAsyncThunk(
   },
 );
 
+export const signOut = createAsyncThunk('auth/signOut', async () => {
+  const logout = await auth().signOut();
+  console.log('logged out');
+  return logout;
+});
+
 interface AuthState {
   logged: boolean;
   fromRegister: boolean;
@@ -104,6 +110,7 @@ const authSlice = createSlice({
     },
   },
   extraReducers: builder => {
+    // getUser
     builder.addCase(getUser.pending, state => {
       state.status = 'loading';
     }),
@@ -118,6 +125,7 @@ const authSlice = createSlice({
       builder.addCase(getUser.rejected, state => {
         state.status = 'failed';
       }),
+      // createUser
       builder.addCase(createUser.fulfilled, state => {
         state.fromRegister = false;
       }),
@@ -126,6 +134,15 @@ const authSlice = createSlice({
       }),
       builder.addCase(createUser.rejected, state => {
         state.fromRegister = false;
+      }),
+      // signOut
+      builder.addCase(signOut.fulfilled, state => {
+        state.logged = false;
+        state.userData.id = undefined;
+        state.userData.email = undefined;
+        state.userData.username = undefined;
+        state.userData.avatar = undefined;
+        state.status = 'idle';
       });
   },
 });
