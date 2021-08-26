@@ -1,7 +1,15 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
-import firestore from '@react-native-firebase/firestore';
+import firestore, {
+  FirebaseFirestoreTypes,
+} from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
+import {RootState} from './index';
 
-export const getUser = createAsyncThunk(
+export const getUser = createAsyncThunk<
+  FirebaseFirestoreTypes.DocumentData,
+  string,
+  {state: RootState}
+>(
   'auth/getUser',
   async (userId: string) => {
     const data = await firestore()
@@ -13,10 +21,72 @@ export const getUser = createAsyncThunk(
       });
     return data;
   },
+  {
+    condition: (userId, {getState}) => {
+      const {auth} = getState();
+      if (auth.fromUserInteraction) {
+        return false;
+      }
+    },
+  },
+);
+
+interface SignUpCredentials {
+  email: string;
+  password: string;
+  fullName: string;
+}
+
+export const createUser = createAsyncThunk(
+  'auth/createUser',
+  async (signUpCredentials: SignUpCredentials, {rejectWithValue}) => {
+    const {email, password, fullName} = signUpCredentials;
+    try {
+      // create user in auth
+      const user = await auth().createUserWithEmailAndPassword(email, password);
+      // create User's doc
+      const createdUser = await firestore()
+        .collection('Users')
+        .doc(user.user.uid)
+        .set({
+          id: user.user.uid,
+          email: email,
+          username: fullName,
+        });
+      return user.user.uid;
+    } catch (err) {
+      return rejectWithValue(err.code);
+    }
+  },
+);
+
+export const signOut = createAsyncThunk('auth/signOut', async () => {
+  const logout = await auth().signOut();
+  console.log('logged out');
+  return logout;
+});
+
+interface SignInCredentials {
+  email: string;
+  password: string;
+}
+
+export const signIn = createAsyncThunk(
+  'auth/signIn',
+  async (signInCredentials: SignInCredentials, {rejectWithValue}) => {
+    try {
+      const {email, password} = signInCredentials;
+      const user = await auth().signInWithEmailAndPassword(email, password);
+      return user.user.uid;
+    } catch (err) {
+      return rejectWithValue(err.code);
+    }
+  },
 );
 
 interface AuthState {
   logged: boolean;
+  fromUserInteraction: boolean;
   status: 'idle' | 'loading' | 'success' | 'failed';
   userData: {
     id: string | undefined;
@@ -28,6 +98,7 @@ interface AuthState {
 
 const initialState = {
   status: 'idle',
+  fromUserInteraction: false,
   logged: false,
   userData: {
     id: undefined,
@@ -55,6 +126,7 @@ const authSlice = createSlice({
     },
   },
   extraReducers: builder => {
+    // getUser
     builder.addCase(getUser.pending, state => {
       state.status = 'loading';
     }),
@@ -68,6 +140,35 @@ const authSlice = createSlice({
       }),
       builder.addCase(getUser.rejected, state => {
         state.status = 'failed';
+      }),
+      // createUser
+      builder.addCase(createUser.fulfilled, state => {
+        state.fromUserInteraction = false;
+      }),
+      builder.addCase(createUser.pending, state => {
+        state.fromUserInteraction = true;
+      }),
+      builder.addCase(createUser.rejected, state => {
+        state.fromUserInteraction = false;
+      }),
+      // signIn
+      builder.addCase(signIn.fulfilled, state => {
+        state.fromUserInteraction = false;
+      }),
+      builder.addCase(signIn.pending, state => {
+        state.fromUserInteraction = true;
+      }),
+      builder.addCase(signIn.rejected, state => {
+        state.fromUserInteraction = false;
+      }),
+      // signOut
+      builder.addCase(signOut.fulfilled, state => {
+        state.logged = false;
+        state.userData.id = undefined;
+        state.userData.email = undefined;
+        state.userData.username = undefined;
+        state.userData.avatar = undefined;
+        state.status = 'idle';
       });
   },
 });

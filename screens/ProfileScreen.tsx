@@ -1,29 +1,20 @@
 import React from 'react';
 import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
-import auth from '@react-native-firebase/auth';
-
-import {logOutState} from '../store/auth-slice';
-
-import {useDispatch} from 'react-redux';
-
-import ImageSelector from '../components/ImageSelector';
+import {useAppDispatch} from '../store/index';
 import {MainScreenNavigationProp} from '../navigation/RootNavigator';
+
+import {signOut} from '../store/auth-slice';
+import ImageSelector from '../components/ImageSelector';
 
 type Props = {
   navigation: MainScreenNavigationProp;
 };
 
 const ProfileScreen = ({navigation}: Props) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const logOut = () => {
-    auth()
-      .signOut()
-      .then(() => {
-        console.log('User signed out!');
-        navigation.navigate('LogIn');
-        dispatch(logOutState());
-      });
+    dispatch(signOut()).then(() => navigation.navigate('LogIn'));
   };
 
   return (

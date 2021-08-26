@@ -8,11 +8,12 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
-import {useSelector, useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
+import {useAppDispatch} from '../store/index';
 import {RootState} from '../store/index';
 import {LogInScreenNavigationProp} from '../navigation/RootNavigator';
+import {signIn, getUser} from '../store/auth-slice';
 
-import {loginHandler} from '../utils/loginHandler';
 import ErrorMessageBox from '../components/ErrorMessageBox';
 
 type Props = {
@@ -20,7 +21,7 @@ type Props = {
 };
 
 const LogInScreen = ({navigation}: Props) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const authData = useSelector((state: RootState) => state.auth);
 
   const [initializing, setInitializing] = useState<boolean>(true);
@@ -38,7 +39,7 @@ const LogInScreen = ({navigation}: Props) => {
   const onAuthStateChanged = (user: FirebaseAuthTypes.User | null) => {
     if (user) {
       setLoading(true);
-      loginHandler(user, dispatch);
+      dispatch(getUser(user.uid));
     } else {
       setLoading(false);
     }
@@ -60,32 +61,32 @@ const LogInScreen = ({navigation}: Props) => {
   const login = () => {
     setErrorMessage(undefined);
     if (!email || !password) return;
-    auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(() => {
-        console.log('Logged In');
-        setEmail('');
-        setPassword('');
+
+    dispatch(signIn({email, password}))
+      .unwrap()
+      .then(userId => {
+        dispatch(getUser(userId)).then(() => {
+          navigation.navigate('Main');
+          setEmail('');
+          setPassword('');
+        });
       })
-      .catch(error => {
-        if (error.code === 'auth/invalid-email') {
+      .catch(err => {
+        if (err === 'auth/invalid-email') {
           console.log('Invalid email!');
           setErrorMessage('Invalid email!');
           setEmail('');
-          setPassword('');
         }
-        if (error.code === 'auth/wrong-password') {
+        if (err === 'auth/wrong-password') {
           console.log('Wrong Password!');
           setErrorMessage('Wrong Password!');
-          setPassword('');
         }
-        if (error.code === 'auth/user-not-found') {
+        if (err === 'auth/user-not-found') {
           console.log("User doesn't exist!");
           setErrorMessage("User doesn't exist!");
           setEmail('');
-          setPassword('');
         }
-        //console.error(error);
+        setPassword('');
       });
   };
 
