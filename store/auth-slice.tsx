@@ -1,5 +1,6 @@
-import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
+import {createSlice, createAsyncThunk, isDraft} from '@reduxjs/toolkit';
 import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
 
 export const getUser = createAsyncThunk(
   'auth/getUser',
@@ -15,8 +16,38 @@ export const getUser = createAsyncThunk(
   },
 );
 
+interface SignUpCredentials {
+  email: string;
+  password: string;
+  fullName: string;
+}
+
+export const createUser = createAsyncThunk(
+  'auth/createUser',
+  async (signUpCredentials: SignUpCredentials, {rejectWithValue}) => {
+    const {email, password, fullName} = signUpCredentials;
+    // create user in auth
+    try {
+      const user = await auth().createUserWithEmailAndPassword(email, password);
+      // create User's doc
+      const createdUser = await firestore()
+        .collection('Users')
+        .doc(user.user.uid)
+        .set({
+          id: user.user.uid,
+          email: email,
+          username: fullName,
+        });
+      return user.user.uid;
+    } catch (err) {
+      return rejectWithValue(err.code);
+    }
+  },
+);
+
 interface AuthState {
   logged: boolean;
+  fromRegister: boolean;
   status: 'idle' | 'loading' | 'success' | 'failed';
   userData: {
     id: string | undefined;
@@ -28,6 +59,7 @@ interface AuthState {
 
 const initialState = {
   status: 'idle',
+  fromRegister: false,
   logged: false,
   userData: {
     id: undefined,
