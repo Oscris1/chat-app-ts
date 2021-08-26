@@ -1,8 +1,15 @@
-import {createSlice, createAsyncThunk, isDraft} from '@reduxjs/toolkit';
-import firestore from '@react-native-firebase/firestore';
+import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
+import firestore, {
+  FirebaseFirestoreTypes,
+} from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
+import {RootState} from './index';
 
-export const getUser = createAsyncThunk(
+export const getUser = createAsyncThunk<
+  FirebaseFirestoreTypes.DocumentData,
+  string,
+  {state: RootState}
+>(
   'auth/getUser',
   async (userId: string) => {
     const data = await firestore()
@@ -13,6 +20,16 @@ export const getUser = createAsyncThunk(
         return userData.data();
       });
     return data;
+  },
+  {
+    condition: (userId, {getState}) => {
+      console.log('check if from register');
+      const {auth} = getState();
+      if (auth.fromRegister) {
+        console.log('from register');
+        return false;
+      }
+    },
   },
 );
 
@@ -26,8 +43,8 @@ export const createUser = createAsyncThunk(
   'auth/createUser',
   async (signUpCredentials: SignUpCredentials, {rejectWithValue}) => {
     const {email, password, fullName} = signUpCredentials;
-    // create user in auth
     try {
+      // create user in auth
       const user = await auth().createUserWithEmailAndPassword(email, password);
       // create User's doc
       const createdUser = await firestore()
@@ -100,6 +117,15 @@ const authSlice = createSlice({
       }),
       builder.addCase(getUser.rejected, state => {
         state.status = 'failed';
+      }),
+      builder.addCase(createUser.fulfilled, state => {
+        state.fromRegister = false;
+      }),
+      builder.addCase(createUser.pending, state => {
+        state.fromRegister = true;
+      }),
+      builder.addCase(createUser.rejected, state => {
+        state.fromRegister = false;
       });
   },
 });

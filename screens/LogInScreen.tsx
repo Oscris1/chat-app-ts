@@ -8,9 +8,11 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
-import {useSelector, useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
+import {useAppDispatch} from '../store/index';
 import {RootState} from '../store/index';
 import {LogInScreenNavigationProp} from '../navigation/RootNavigator';
+import {createUser, getUser} from '../store/auth-slice';
 
 import {loginHandler} from '../utils/loginHandler';
 import ErrorMessageBox from '../components/ErrorMessageBox';
@@ -20,7 +22,7 @@ type Props = {
 };
 
 const LogInScreen = ({navigation}: Props) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const authData = useSelector((state: RootState) => state.auth);
 
   const [initializing, setInitializing] = useState<boolean>(true);
@@ -38,7 +40,7 @@ const LogInScreen = ({navigation}: Props) => {
   const onAuthStateChanged = (user: FirebaseAuthTypes.User | null) => {
     if (user) {
       setLoading(true);
-      loginHandler(user, dispatch);
+      dispatch(getUser(user.uid));
     } else {
       setLoading(false);
     }
