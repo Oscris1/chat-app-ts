@@ -27,7 +27,7 @@ interface UserInterface {
 
 interface Props {
   id: string;
-  message: {
+  message?: {
     id: string;
     createdAt: any; //timestamp
     text: string;
@@ -101,6 +101,7 @@ const ChatListElement: React.FC<Props> = ({
       <TouchableOpacity
         style={displayed ? styles.container : styles.containerNotDisplayed}
         onPress={() => pressChatWrapper(user)}>
+        {console.log(`rerender ${user.username}`)}
         {/** display user's avatar, else if user doesn't have avatar  display default image */}
         <Image
           style={styles.tinyLogo}
@@ -119,7 +120,7 @@ const ChatListElement: React.FC<Props> = ({
 
         {/** Last message timer */}
         <Text style={styles.time}>
-          {message && message.createdAt.toDate().toTimeString().split(' ')[0]}
+          {message && message.createdAt.split(' ')[0]}
         </Text>
       </TouchableOpacity>
     );
@@ -178,4 +179,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ChatListElement;
+export default React.memo(ChatListElement);

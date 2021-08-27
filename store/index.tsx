@@ -1,10 +1,12 @@
 import {configureStore} from '@reduxjs/toolkit';
 import authSlice from './auth-slice';
+import chatsSlice from './chats-slice';
 import {useDispatch} from 'react-redux';
 
 const store = configureStore({
   reducer: {
     auth: authSlice.reducer,
+    chats: chatsSlice.reducer,
   },
 });
 

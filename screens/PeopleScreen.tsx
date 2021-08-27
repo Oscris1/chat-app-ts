@@ -4,27 +4,15 @@ import {useSelector} from 'react-redux';
 import firestore from '@react-native-firebase/firestore';
 
 import ChatListElement from '../components/ChatListElement';
-import {RootState} from '../store/index';
-
-interface UserChatInterface {
-  id: string; // chat id
-  user: string; // chat user id
-  lastMessage: {
-    id: string;
-    createdAt: any; //timestamp
-    text: string;
-    user: string; // message creator's id
-  };
-  lastUpdate: string;
-  displayed: boolean;
-  chatRef: string;
-}
+import {RootState, useAppDispatch} from '../store/index';
+import {fetchUserChats} from '../store/chats-slice';
 
 const PeopleScreen = () => {
   const authData = useSelector((state: RootState) => state.auth);
+  const chatsData = useSelector((state: RootState) => state.chats);
+  const chats = chatsData.chatsList;
+  const dispatch = useAppDispatch();
 
-  const [loading, setLoading] = useState<boolean>(true);
-  const [chats, setChats] = useState<UserChatInterface[]>([]);
   const ref = firestore()
     .collection('Users')
     .doc(authData.userData.id)
@@ -33,29 +21,9 @@ const PeopleScreen = () => {
   // fetch Chats
   useEffect(() => {
     return ref.orderBy('lastUpdate', 'desc').onSnapshot(querySnapshot => {
-      // List of user's chats
-      const list: UserChatInterface[] = [];
-      querySnapshot.forEach(documentSnapshot => {
-        // data inside the User -> Chat doc
-        const {id, user, lastMessage, lastUpdate, displayed} =
-          documentSnapshot.data();
-        const chatRef = documentSnapshot.id;
-        list.push({
-          id,
-          user,
-          lastMessage,
-          lastUpdate,
-          chatRef,
-          displayed,
-        });
-      });
-      setChats(list);
-
-      if (loading) {
-        setLoading(false);
-      }
+      dispatch(fetchUserChats(querySnapshot));
     });
-  }, [authData.status]);
+  }, []);
 
   return (
     <View style={styles.container}>
