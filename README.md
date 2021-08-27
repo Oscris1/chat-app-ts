@@ -1,4 +1,10 @@
-# games-app (React Native)
+# Chat App (React-Native)
+
+
+
+https://user-images.githubusercontent.com/48210346/131148993-caff26a4-11bd-4d78-bdcf-748064e85d2b.mp4
+
+
 
 Simple real-time messaging application
   
@@ -10,10 +16,7 @@ Simple real-time messaging application
 - Firebase
 - React Native Gifted Chat
 - react-native-image-crop-picker
-## Video
 
-
-https://user-images.githubusercontent.com/48210346/130499599-eef2a984-0725-4529-8d93-16f94480a9dd.mp4
 
 
 ## Screenshots
