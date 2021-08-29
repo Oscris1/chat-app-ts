@@ -4,6 +4,8 @@ import {
   StackNavigationProp,
 } from '@react-navigation/stack';
 
+import {useSelector} from 'react-redux';
+import {RootState} from '../store/index';
 import LogInScreen from '../screens/LogInScreen';
 import RegistrationScreen from '../screens/RegistrationScreen';
 import TabNavigator from './TabNavigator';
@@ -32,23 +34,29 @@ export type MainScreenNavigationProp = StackNavigationProp<
 const RootStack = createStackNavigator<RootStackParamList>();
 
 const RootNavigator = () => {
+  const isLogged = useSelector((state: RootState) => state.auth.logged);
   return (
-    <RootStack.Navigator mode="modal">
-      <RootStack.Screen
-        name="LogIn"
-        component={LogInScreen}
-        options={{headerShown: false}}
-      />
-      <RootStack.Screen
-        name="Register"
-        component={RegistrationScreen}
-        options={{headerShown: false}}
-      />
-      <RootStack.Screen
-        name="Main"
-        component={TabNavigator}
-        options={{headerShown: false}}
-      />
+    <RootStack.Navigator>
+      {isLogged ? (
+        <RootStack.Screen
+          name="Main"
+          component={TabNavigator}
+          options={{headerShown: false}}
+        />
+      ) : (
+        <>
+          <RootStack.Screen
+            name="LogIn"
+            component={LogInScreen}
+            options={{headerShown: false}}
+          />
+          <RootStack.Screen
+            name="Register"
+            component={RegistrationScreen}
+            options={{headerShown: false}}
+          />
+        </>
+      )}
     </RootStack.Navigator>
   );
 };

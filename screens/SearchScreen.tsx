@@ -12,6 +12,7 @@ import {useSelector} from 'react-redux';
 import firestore from '@react-native-firebase/firestore';
 import SearchedUser from '../components/SearchedUser';
 import {RootState} from '../store/index';
+import {useIsFocused} from '@react-navigation/native';
 
 const defaultAvatar =
   'https://firebasestorage.googleapis.com/v0/b/chat-app-c20dd.appspot.com/o/defAvatar.jpg?alt=media&token=44212c24-deb3-41f2-9251-7931f53d18fa';
@@ -24,6 +25,7 @@ interface SearchedUserInterface {
 }
 
 const SearchScreen = () => {
+  const isFocused = useIsFocused();
   const [emailText, setEmailText] = useState<string>('');
   const [searchedUsers, setSearchedUsers] = useState<SearchedUserInterface[]>(
     [],
@@ -40,21 +42,23 @@ const SearchScreen = () => {
 
   // fetch Chat Users
   useEffect(() => {
-    return ref.onSnapshot(querySnapshot => {
-      // List of users id (for check if chat already exist)
-      const list: string[] = [];
-      querySnapshot.forEach(documentSnapshot => {
-        // data inside the Chat doc
-        const {user} = documentSnapshot.data();
-        list.push(user);
-      });
-      setChatUsers(list);
+    if (isFocused) {
+      return ref.onSnapshot(querySnapshot => {
+        // List of users id (for check if chat already exist)
+        const list: string[] = [];
+        querySnapshot.forEach(documentSnapshot => {
+          // data inside the Chat doc
+          const {user} = documentSnapshot.data();
+          list.push(user);
+        });
+        setChatUsers(list);
 
-      if (loading) {
-        setLoading(false);
-      }
-    });
-  }, []);
+        if (loading) {
+          setLoading(false);
+        }
+      });
+    }
+  }, [isFocused]);
 
   // search user by email
   const searchByEmail = () => {

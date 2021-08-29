@@ -40,9 +40,7 @@ const RegistrationScreen = ({navigation}: Props) => {
     if (email && password && fullName) {
       dispatch(createUser({email, password, fullName}))
         .unwrap()
-        .then(userId =>
-          dispatch(getUser(userId)).then(() => navigation.navigate('Main')),
-        )
+        .then(userId => dispatch(getUser(userId)))
         .catch(err => {
           if (err === 'auth/email-already-in-use') {
             console.log('That email address is already in use!');

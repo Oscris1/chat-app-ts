@@ -3,6 +3,7 @@ import {View, Text, StyleSheet, FlatList} from 'react-native';
 import {useSelector} from 'react-redux';
 import firestore from '@react-native-firebase/firestore';
 
+import {useIsFocused, useFocusEffect} from '@react-navigation/native';
 import ChatListElement from '../components/ChatListElement';
 import {RootState} from '../store/index';
 
@@ -22,40 +23,45 @@ interface UserChatInterface {
 
 const PeopleScreen = () => {
   const authData = useSelector((state: RootState) => state.auth);
+  const isFocused = useIsFocused();
+  console.log(isFocused);
 
   const [loading, setLoading] = useState<boolean>(true);
   const [chats, setChats] = useState<UserChatInterface[]>([]);
+
   const ref = firestore()
     .collection('Users')
     .doc(authData.userData.id)
     .collection('Chats');
 
-  // fetch Chats
-  useEffect(() => {
-    return ref.orderBy('lastUpdate', 'desc').onSnapshot(querySnapshot => {
-      // List of user's chats
-      const list: UserChatInterface[] = [];
-      querySnapshot.forEach(documentSnapshot => {
-        // data inside the User -> Chat doc
-        const {id, user, lastMessage, lastUpdate, displayed} =
-          documentSnapshot.data();
-        const chatRef = documentSnapshot.id;
-        list.push({
-          id,
-          user,
-          lastMessage,
-          lastUpdate,
-          chatRef,
-          displayed,
+  useFocusEffect(
+    //fetch only if screen is focused
+    React.useCallback(() => {
+      return ref.orderBy('lastUpdate', 'desc').onSnapshot(querySnapshot => {
+        // List of user's chats
+        const list: UserChatInterface[] = [];
+        querySnapshot.forEach(documentSnapshot => {
+          // data inside the User -> Chat doc
+          const {id, user, lastMessage, lastUpdate, displayed} =
+            documentSnapshot.data();
+          const chatRef = documentSnapshot.id;
+          list.push({
+            id,
+            user,
+            lastMessage,
+            lastUpdate,
+            chatRef,
+            displayed,
+          });
         });
-      });
-      setChats(list);
+        setChats(list);
 
-      if (loading) {
-        setLoading(false);
-      }
-    });
-  }, [authData.status]);
+        if (loading) {
+          setLoading(false);
+        }
+      });
+    }, []),
+  );
 
   return (
     <View style={styles.container}>
