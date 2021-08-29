@@ -5,63 +5,33 @@ import firestore from '@react-native-firebase/firestore';
 
 import {useIsFocused, useFocusEffect} from '@react-navigation/native';
 import ChatListElement from '../components/ChatListElement';
-import {RootState} from '../store/index';
-
-interface UserChatInterface {
-  id: string; // chat id
-  user: string; // chat user id
-  lastMessage: {
-    id: string;
-    createdAt: any; //timestamp
-    text: string;
-    user: string; // message creator's id
-  };
-  lastUpdate: string;
-  displayed: boolean;
-  chatRef: string;
-}
+import {RootState, useAppDispatch} from '../store/index';
+import {fetchUserChats} from '../store/chats-slice';
 
 const PeopleScreen = () => {
   const authData = useSelector((state: RootState) => state.auth);
+
+  const chatsData = useSelector((state: RootState) => state.chats);
+  const chats = chatsData.chatsList;
+  const dispatch = useAppDispatch();
   const isFocused = useIsFocused();
   console.log(isFocused);
-
-  const [loading, setLoading] = useState<boolean>(true);
-  const [chats, setChats] = useState<UserChatInterface[]>([]);
 
   const ref = firestore()
     .collection('Users')
     .doc(authData.userData.id)
     .collection('Chats');
 
+  // fetch Chats
   useFocusEffect(
     //fetch only if screen is focused
     React.useCallback(() => {
       return ref.orderBy('lastUpdate', 'desc').onSnapshot(querySnapshot => {
-        // List of user's chats
-        const list: UserChatInterface[] = [];
-        querySnapshot.forEach(documentSnapshot => {
-          // data inside the User -> Chat doc
-          const {id, user, lastMessage, lastUpdate, displayed} =
-            documentSnapshot.data();
-          const chatRef = documentSnapshot.id;
-          list.push({
-            id,
-            user,
-            lastMessage,
-            lastUpdate,
-            chatRef,
-            displayed,
-          });
-        });
-        setChats(list);
-
-        if (loading) {
-          setLoading(false);
-        }
-      });
+      dispatch(fetchUserChats(querySnapshot));
+    });
     }, []),
   );
+
 
   return (
     <View style={styles.container}>
