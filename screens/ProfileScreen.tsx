@@ -14,7 +14,7 @@ const ProfileScreen = ({navigation}: Props) => {
   const dispatch = useAppDispatch();
 
   const logOut = () => {
-    dispatch(signOut()).then(() => navigation.navigate('LogIn'));
+    dispatch(signOut());
   };
 
   return (

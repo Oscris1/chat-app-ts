@@ -18,7 +18,7 @@ const ChatStack = createStackNavigator<ChatStackParamList>();
 
 const ChatNavigator = () => {
   return (
-    <ChatStack.Navigator mode="modal">
+    <ChatStack.Navigator>
       <ChatStack.Screen
         name="PeopleList"
         component={PeopleScreen}

@@ -54,7 +54,6 @@ const LogInScreen = ({navigation}: Props) => {
   useEffect(() => {
     if (authData.status === 'success') {
       setLoading(false);
-      navigation.navigate('Main');
     }
   }, [authData.status]);
 
@@ -66,7 +65,6 @@ const LogInScreen = ({navigation}: Props) => {
       .unwrap()
       .then(userId => {
         dispatch(getUser(userId)).then(() => {
-          navigation.navigate('Main');
           setEmail('');
           setPassword('');
         });

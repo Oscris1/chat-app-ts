@@ -3,15 +3,19 @@ import {View, Text, StyleSheet, FlatList} from 'react-native';
 import {useSelector} from 'react-redux';
 import firestore from '@react-native-firebase/firestore';
 
+import {useIsFocused, useFocusEffect} from '@react-navigation/native';
 import ChatListElement from '../components/ChatListElement';
 import {RootState, useAppDispatch} from '../store/index';
 import {fetchUserChats} from '../store/chats-slice';
 
 const PeopleScreen = () => {
   const authData = useSelector((state: RootState) => state.auth);
+
   const chatsData = useSelector((state: RootState) => state.chats);
   const chats = chatsData.chatsList;
   const dispatch = useAppDispatch();
+  const isFocused = useIsFocused();
+  console.log(isFocused);
 
   const ref = firestore()
     .collection('Users')
@@ -19,11 +23,15 @@ const PeopleScreen = () => {
     .collection('Chats');
 
   // fetch Chats
-  useEffect(() => {
-    return ref.orderBy('lastUpdate', 'desc').onSnapshot(querySnapshot => {
+  useFocusEffect(
+    //fetch only if screen is focused
+    React.useCallback(() => {
+      return ref.orderBy('lastUpdate', 'desc').onSnapshot(querySnapshot => {
       dispatch(fetchUserChats(querySnapshot));
     });
-  }, []);
+    }, []),
+  );
+
 
   return (
     <View style={styles.container}>
